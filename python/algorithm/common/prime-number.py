@@ -18,30 +18,20 @@
 """
 import math
 
-def checkPrimeNum(number):
-    '''
-    Determine if a number is a prime number
-    '''
-    if number < 2:
+def check_prime_number(checked_number):
+    if checked_number < 2:
         return False
-    index = 2
-    sqrtNum = int(math.sqrt(number))
-    while index <= sqrtNum:
-        if (number % index) == 0:
+    sqrt_number = int(math.sqrt(checked_number))
+    for index in range(2, sqrt_number+1):
+        if (checked_number % index) == 0:
             return False
-        index += 1
     return True
 
-def primeNumber(maxNum):
-    '''
-    Print prime numbers from 0 to maxNum
-    '''
-    index = 0
-    while index <= maxNum:
-        if checkPrimeNum(index):
+def print_prime_number(max_number):
+    for index in range(0, max_number+1):
+        if check_prime_number(index):
             print('%d, ' % index, end='');
-        index += 1
     print("")
 
 if __name__ == "__main__":
-    primeNumber(100)
+    print_prime_number(100)
