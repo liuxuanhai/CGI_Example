@@ -18,17 +18,16 @@
 """
 ls = [3, 6, 8, 9, 10, 15, 20]
 
-def binSearch(sLs, get):
-    head = 0                        #list head
-    tail = len(sLs)-1               #list tail
-    while head < tail:              #do not over
-        mid = int((head+tail)/2)
-        if sLs[mid] == get:
+def binSearch(be_sorted_list, key):
+    head = 0                    
+    tail = len(be_sorted_list)-1        
+    while head < tail:          
+        mid = int((head+tail) / 2)
+        if be_sorted_list[mid] == key:
             return mid
-        elif sLs[mid] > get:
-            tail = mid-1            #prev
-        elif sLs[mid] < get:
-            head = mid+1            #next
-    return None
+        elif be_sorted_list[mid] > key:
+            tail = mid - 1          
+        elif be_sorted_list[mid] < key:
+            head = mid + 1          
 if __name__ == "__main__":
-    print(binSearch(ls, 9))
+    binSearch(ls, 9)
