@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Windos 10</title>
+  <link href="css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<!-- 页眉，全站导航 -->
+  <header role="banner">
+    <!-- 全站导航,主要的导航连接采访在nav里面 -->
+    <nav role="navigation">
+      <ul>
+        <li><a href="#gaudi">xxx</a></li>
+        <li><a href="#park">Park Guell</a></li>
+      </ul>
+    </nav>
+  </header>
+<!-- 主要内容 -->
+  <main role="main">
+    <article>
+      <!-- 页面深处的导航性标识 -->
+      <header>
+        <h1 class="test-1">Frequently Asked Questions</h1>
+        <nav>
+          <ul>
+            <li><a href="#gaudi">xxx</a></li>
+            <li><a href="#park">Park Guell</a></li>
+          </ul>
+        </nav>
+      </header>
+      <article id="answer1">
+        <h2>What is your return policy?</h2>
+        <!-- 原样输出格式 -->
+        <pre>
+          <code>
+            int a =9;
+            int b = 10;
+          </code>
+
+        </pre>
+        <p> ... [答案] ... </p>
+        <meter value="0.8">80%</meter>
+        <!-- 创建图表，由上面内容引申出来的 -->
+        <figure>
+<!-- 对参考源的引用, cite用于指明引用或参考 -->
+          <figcaption><b>A picture <cite>ZUDARTS_LEE</cite></b></figcaption>
+          <img src="img/zudarts-lee-171223.jpg" width="1600" height="877">
+          <!-- blockquote表示文本引用，较长,一般是一个段落 -->
+          <blockquote cite="www.astralrovers.com"><p>sprintf(buf, "%s%s", FTP_TAR_DIR, <dfn>FILE_UPDATE_SHELL</dfn>)</p></blockquote>
+          <figcaption>-- name</figcaption><!-- 用来放在blockquote外面做署名 -->
+          <!-- 作为行内引用，会自动加引号 -->
+          <p>GetDeviceId((char *)buf, (char *)type, BUF_LEN - 1) <q>function</q></p>
+        </figure>
+        <!-- abbr提示缩写 mark为突出显示-->
+        <p><abbr title="signalning unit"><mark>SU</mark></abbr>
+          <abbr>SU</abbr>(signalning unit)</p>
+      </article>
+    </article>
+  </main>
+<!-- 开始附注栏 -->
+  <aside role="complementary">
+    <h1>Architectural Wonders of Barcelona</h1>
+    <!-- 次级导航 -->
+    <nav role="navigation">
+      <ul>
+        <li><a href="/arts/movies/">Movies</a></li>
+        <li><a href="/arts/music/">Music</a></li>
+        ...
+      </ul>
+    </nav>
+  </aside>
+<!-- 页面级页脚 -->
+  <footer role="contentinfo">
+    <!-- 辅助性连接不包含在nav中 -->
+    <ul> ... </ul>
+    <p><small>&copy; Copyright 2018</small></p>
+    <!-- 作者信息 -->
+    <address>www.astralrovers.com</address>
+  </footer>
+</body>
+</html>
