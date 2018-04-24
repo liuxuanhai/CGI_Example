@@ -69,3 +69,39 @@ cal_factorial = function(){     //这里要注意函数名也是一个对象变�
     console.log('not using!');
 }
 cal_factorial();
+
+
+function New_person(){
+    New_person.prototype.name = 'person';       //prototype是每个函数都有的属性，也是一个指针，指向一个对象，这个对象包含所有实例共享的属性和方法
+    New_person.prototype.age = 23;              //也就是说创建的所有实例共享属性和方法
+    New_person.prototype.print_name = function(){
+        return this.name;
+    };
+}
+//所有属性和方法都被添加到了prototype属性中，构造函数是空函数
+
+person2 = new New_person();
+person3 = new New_person();
+
+console.log(person2.print_name());
+console.log('has own name : ' + person2.hasOwnProperty('name'));
+person2.name = 'change';
+console.log('add object property : ' + person2.print_name());
+console.log('has own name : ' + person2.hasOwnProperty('name'));
+console.log(person3.print_name());
+
+console.log(person3.print_name());//既然共享属性和方法，那么为什么person2修改了，person3还是原来的值
+//上述中，如果实例重写了与原型对象属性相同名称的变量，实际上是在示例中创建了一个属性，访问时原型对象的会被屏蔽，
+New_person.prototype.name = 'one-plus';
+console.log('modify prototype : ' + person3.print_name());
+delete person2.name;
+console.log('after delete : ' + person2.print_name());
+
+console.log(New_person.prototype.isPrototypeOf(person2));//查看实例与原型对象是否存在关联
+console.log(New_person.prototype.isPrototypeOf(person3));
+
+console.log('get prototype : ' + Object.getPrototypeOf(person2));
+console.log(Object.getPrototypeOf(person2).name);//查看原型对象的name值
+
+console.log("person2 : " + Object.keys(person2));   //查看所有可遍历属性，同for-in
+console.log("person2 : " + Object.keys(New_person.prototype));

@@ -23,7 +23,7 @@ def check_prime_number(checked_number):
         return False
     sqrt_number = int(math.sqrt(checked_number))
     for index in range(2, sqrt_number+1):
-        if (checked_number % index) == 0:
+        if (checked_number % index) == 0:   #余数为0，则不是质数
             return False
     return True
 
