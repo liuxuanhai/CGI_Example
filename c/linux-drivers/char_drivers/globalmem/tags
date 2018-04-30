@@ -1,0 +1,45 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+DEV_GLB	testglb.c	13;"	d	file:
+DEV_NUM	globalmem.c	34;"	d	file:
+FILE_DRIVER_EN	globalmem.c	36;"	d	file:
+GLBMEM_MAJOR	globalmem.c	33;"	d	file:
+GLB_MEM_SIZE	globalmem.c	28;"	d	file:
+GLOBALMEM_MAGIC	globalmem.c	30;"	d	file:
+KDIR	Makefile	/^KDIR := \/usr\/src\/linux-headers-$(shell uname -r)$/;"	m
+KVER	Makefile	/^KVER ?= $(shell uname -r)  $/;"	m
+MEM_CLEAR	globalmem.c	32;"	d	file:
+POP_MEM_DRIVER_EN	globalmem.c	37;"	d	file:
+PWD	Makefile	/^PWD  := $(shell pwd)  $/;"	m
+cdev	globalmem.c	/^	struct cdev cdev;$/;"	m	struct:globalmem_dev_t	typeref:struct:globalmem_dev_t::cdev	file:
+data_len	globalmem.c	/^	unsigned int data_len;						\/*数据长度*\/$/;"	m	struct:globalmem_dev_t	file:
+fops	globalmem.c	/^struct file_operations fops = {$/;"	v	typeref:struct:file_operations
+glb_name	glbtest.py	/^glb_name = "\/dev\/globalmem0"$/;"	v
+glbmem_llseek	globalmem.c	/^static loff_t glbmem_llseek(struct file *filp, loff_t offset, int orig)$/;"	f	file:
+glbmem_open	globalmem.c	/^static int glbmem_open(struct inode *inode, struct file *filp)$/;"	f	file:
+glbmem_read	globalmem.c	/^static ssize_t glbmem_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos)$/;"	f	file:
+glbmem_release	globalmem.c	/^static int glbmem_release(struct inode *inode, struct file *filp)$/;"	f	file:
+glbmem_unlocked_ioctl	globalmem.c	/^static long glbmem_unlocked_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)$/;"	f	file:
+glbmem_v	globalmem.c	/^	atomic_t glbmem_v;							\/*原子锁*\/$/;"	m	struct:globalmem_dev_t	file:
+glbmem_write	globalmem.c	/^static ssize_t glbmem_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)$/;"	f	file:
+global_mem_exit	globalmem.c	/^module_exit(global_mem_exit);$/;"	v
+global_mem_exit	globalmem.c	/^static void __exit global_mem_exit(void)$/;"	f	file:
+global_mem_init	globalmem.c	/^module_init(global_mem_init);$/;"	v
+global_mem_init	globalmem.c	/^static int __init global_mem_init(void)$/;"	f	file:
+globalmem_class	globalmem.c	/^static struct class *globalmem_class;				\/*创建类*\/$/;"	v	typeref:struct:class	file:
+globalmem_dev	globalmem.c	/^static struct globalmem_dev_t *globalmem_dev;		\/*创建实例*\/$/;"	v	typeref:struct:globalmem_dev_t	file:
+globalmem_dev_t	globalmem.c	/^struct globalmem_dev_t {$/;"	s	file:
+globalmem_major	globalmem.c	/^static int globalmem_major = GLBMEM_MAJOR;$/;"	v	file:
+globalmem_setup_cdev	globalmem.c	/^static void globalmem_setup_cdev(struct globalmem_dev_t *dev, int index)$/;"	f	file:
+main	testglb.c	/^int main()$/;"	f
+mem	globalmem.c	/^	unsigned char mem[GLB_MEM_SIZE];			\/*设备内存*\/$/;"	m	struct:globalmem_dev_t	file:
+mymodule-objs	Makefile	/^mymodule-objs := globalmem.o $/;"	m
+obj-m	Makefile	/^obj-m := globalmem.o $/;"	m
+read_queue	globalmem.c	/^	wait_queue_head_t read_queue;				\/*读队列*\/$/;"	m	struct:globalmem_dev_t	file:
+strbuf	glbtest.py	/^        strbuf = os.read(testfile, 40)$/;"	v
+testfile	glbtest.py	/^testfile = os.open(glb_name, os.O_RDWR)$/;"	v
+write_queue	globalmem.c	/^	wait_queue_head_t write_queue;				\/*写队列*\/$/;"	m	struct:globalmem_dev_t	file:

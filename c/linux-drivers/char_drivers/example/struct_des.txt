@@ -1,0 +1,303 @@
+
+struct cdev {
+	struct kobject kobj;                    // 内嵌的kobject对象 
+	struct module *owner;                   // 所属模块
+	const struct file_operations *ops;      // 文件操作结构体
+	struct list_head list;                  //linux内核所维护的链表指针
+	dev_t dev;                              //设备号
+	unsigned int count;                     //设备数目
+};
+
+1. 重要成员：
+
+1.1 dev_t dev;设备号，31位，高12位是主设备号，低20位是次设备号。以下函数可以操作设备号：
+
+#define MINORBITS    20
+#define MINORMASK    ((1U << MINORBITS) - 1)
+
+#define MAJOR(dev)    ((unsigned int) ((dev) >> MINORBITS))   //获得主设备号
+#define MINOR(dev)    ((unsigned int) ((dev) & MINORMASK))    //获得此设备号
+#define MKDEV(ma,mi)    (((ma) << MINORBITS) | (mi))          //由主次设备号得到设备号
+
+1.2 struct file_operations *ops；
+
+2. 初始化cdev
+
+2.1 静态初始化
+/**
+ * cdev_init() - initialize a cdev structure
+ * @cdev: the structure to initialize
+ * @fops: the file_operations for this device
+ *
+ * Initializes @cdev, remembering @fops, making it ready to add to the
+ * system with cdev_add().
+ */
+void cdev_init(struct cdev *cdev, const struct file_operations *fops)
+{
+	memset(cdev, 0, sizeof *cdev);
+	INIT_LIST_HEAD(&cdev->list);
+	kobject_init(&cdev->kobj, &ktype_cdev_default);
+	cdev->ops = fops;
+}
+
+2.2 动态初始化
+/**
+ * cdev_alloc() - allocate a cdev structure
+ *
+ * Allocates and returns a cdev structure, or NULL on failure.
+ */
+struct cdev *cdev_alloc(void)
+{
+	struct cdev *p = kzalloc(sizeof(struct cdev), GFP_KERNEL);
+	if (p) {
+		INIT_LIST_HEAD(&p->list);
+		kobject_init(&p->kobj, &ktype_cdev_dynamic);
+	}
+	return p;
+}
+
+3. 分配设备号
+
+3.1 指定主设备号
+
+/**
+ * register_chrdev_region() - register a range of device numbers
+ * @from: the first in the desired range of device numbers; must include
+ *        the major number.
+ * @count: the number of consecutive device numbers required
+ * @name: the name of the device or driver.
+ *
+ * Return value is zero on success, a negative error code on failure.
+ */
+int register_chrdev_region(dev_t from, unsigned count, const char *name)
+{
+	struct char_device_struct *cd;
+	dev_t to = from + count;
+	dev_t n, next;
+
+	for (n = from; n < to; n = next) {
+		next = MKDEV(MAJOR(n)+1, 0);
+		if (next > to)
+			next = to;
+		cd = __register_chrdev_region(MAJOR(n), MINOR(n),
+				next - n, name);
+		if (IS_ERR(cd))
+			goto fail;
+	}
+	return 0;
+fail:
+	to = n;
+	for (n = from; n < to; n = next) {
+		next = MKDEV(MAJOR(n)+1, 0);
+		kfree(__unregister_chrdev_region(MAJOR(n), MINOR(n), next - n));
+	}
+	return PTR_ERR(cd);
+}
+
+3.2 系统自动分配主设备号
+/**
+ * alloc_chrdev_region() - register a range of char device numbers
+ * @dev: output parameter for first assigned number
+ * @baseminor: first of the requested range of minor numbers
+ * @count: the number of minor numbers required
+ * @name: the name of the associated device or driver
+ *
+ * Allocates a range of char device numbers.  The major number will be
+ * chosen dynamically, and returned (along with the first minor number)
+ * in @dev.  Returns zero or a negative error code.
+ */
+int alloc_chrdev_region(dev_t *dev, unsigned baseminor, unsigned count,
+		const char *name)
+{
+	struct char_device_struct *cd;
+	cd = __register_chrdev_region(0, baseminor, count, name);
+	if (IS_ERR(cd))
+		return PTR_ERR(cd);
+	*dev = MKDEV(cd->major, cd->baseminor);
+	return 0;
+}
+
+注册设备
+/**
+ * cdev_add() - add a char device to the system
+ * @p: the cdev structure for the device
+ * @dev: the first device number for which this device is responsible
+ * @count: the number of consecutive minor numbers corresponding to this
+ *         device
+ *
+ * cdev_add() adds the device represented by @p to the system, making it
+ * live immediately.  A negative error code is returned on failure.
+ */
+int cdev_add(struct cdev *p, dev_t dev, unsigned count)
+{
+	int error;
+
+	p->dev = dev;
+	p->count = count;
+
+	error = kobj_map(cdev_map, dev, count, NULL,
+			 exact_match, exact_lock, p);
+	if (error)
+		return error;
+
+	kobject_get(p->kobj.parent);
+
+	return 0;
+}
+
+4 注销设备号
+
+与上述两个分配设备号对应的注销设备号的函数如下
+/**
+ * unregister_chrdev_region() - return a range of device numbers
+ * @from: the first in the range of numbers to unregister
+ * @count: the number of device numbers to unregister
+ *
+ * This function will unregister a range of @count device numbers,
+ * starting with @from.  The caller should normally be the one who
+ * allocated those numbers in the first place...
+ */
+void unregister_chrdev_region(dev_t from, unsigned count)
+{
+	dev_t to = from + count;
+	dev_t n, next;
+
+	for (n = from; n < to; n = next) {
+		next = MKDEV(MAJOR(n)+1, 0);
+		if (next > to)
+			next = to;
+		kfree(__unregister_chrdev_region(MAJOR(n), MINOR(n), next - n));
+	}
+}
+
+
+
+/** 
+ * author:hasen 
+ * 参考：《linux设备驱动开发详解》和sunsea1026的CSDN博客 
+ * 作用：方便自己参考查阅 
+ */  
+struct file_operations{  
+	struct module *owner  
+		//第一个 file_operations 成员根本不是一个操作; 它是一个指向拥有这个结构的模块的指针. 这个成员用来在它的操作还在被使用时阻止模块被卸载. 几乎所有时间中, 它被简单初始化为 THIS_MODULE, 一个在 <linux/module.h> 中定义的宏.  
+
+		loff_t (*llseek) (struct file *, loff_t, int);  
+	//llseek 方法用作改变文件中的当前读/写位置, 并且新位置作为(正的)返回值. loff_t 参数是一个"long offset", 并且就算在 32位平台上也至少 64 位宽. 错误由一个负返回值指示. 如果这个函数指针是 NULL, seek 调用会以潜在地无法预知的方式修改 file 结构中的位置计数器( 在"file 结构" 一节中描述).  
+
+	ssize_t (*read) (struct file *, char __user *, size_t, loff_t *);  
+	//用来从设备中获取数据. 在这个位置的一个空指针导致 read 系统调用以 -EINVAL("Invalid argument") 失败. 一个非负返回值代表了成功读取的字节数( 返回值是一个 "signed size" 类型, 常常是目标平台本地的整数类型).  
+
+	ssize_t (*aio_read)(struct kiocb *, char __user *, size_t, loff_t);  
+	//初始化一个异步读 -- 可能在函数返回前不结束的读操作. 如果这个方法是 NULL, 所有的操作会由 read 代替进行(同步地).  
+
+	ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);  
+	//发送数据给设备. 如果 NULL, -EINVAL 返回给调用 write 系统调用的程序. 如果非负, 返回值代表成功写的字节数.  
+
+	ssize_t (*aio_write)(struct kiocb *, const char __user *, size_t, loff_t *);  
+	//初始化设备上的一个异步写.  
+
+	int (*readdir) (struct file *, void *, filldir_t);  
+	//对于设备文件这个成员应当为 NULL; 它用来读取目录, 并且仅对文件系统有用.  
+
+	unsigned int (*poll) (struct file *, struct poll_table_struct *);  
+	//poll 方法是 3 个系统调用的后端: poll, epoll, 和 select, 都用作查询对一个或多个文件描述符的读或写是否会阻塞. poll 方法应当返回一个位掩码指示是否非阻塞的读或写是可能的, 并且, 可能地, 提供给内核信息用来使调用进程睡眠直到 I/O 变为可能. 如果一个驱动的 poll 方法为 NULL, 设备假定为不阻塞地可读可写.  
+
+	int (*ioctl) (struct inode *, struct file *, unsigned int, unsigned long);  
+	//ioctl 系统调用提供了发出设备特定命令的方法(例如格式化软盘的一个磁道, 这不是读也不是写). 另外, 几个 ioctl 命令被内核识别而不必引用 fops 表. 如果设备不提供 ioctl 方法, 对于任何未事先定义的请求(-ENOTTY, "设备无这样的 ioctl"), 系统调用返回一个错误.  
+
+	int (*mmap) (struct file *, struct vm_area_struct *);  
+	//mmap 用来请求将设备内存映射到进程的地址空间. 如果这个方法是 NULL, mmap 系统调用返回 -ENODEV.  
+
+	int (*open) (struct inode *, struct file *);  
+	//尽管这常常是对设备文件进行的第一个操作, 不要求驱动声明一个对应的方法. 如果这个项是 NULL, 设备打开一直成功, 但是你的驱动不会得到通知.  
+
+	int (*flush) (struct file *);  
+	//flush 操作在进程关闭它的设备文件描述符的拷贝时调用; 它应当执行(并且等待)设备的任何未完成的操作. 这个必须不要和用户查询请求的 fsync 操作混淆了. 当前, flush 在很少驱动中使用; SCSI 磁带驱动使用它, 例如, 为确保所有写的数据在设备关闭前写到磁带上. 如果 flush 为 NULL, 内核简单地忽略用户应用程序的请求.  
+
+	int (*release) (struct inode *, struct file *);  
+	//在文件结构被释放时引用这个操作. 如同 open, release 可以为 NULL.  
+
+	int (*fsync) (struct file *, struct dentry *, int);  
+	//这个方法是 fsync 系统调用的后端, 用户调用来刷新任何挂着的数据. 如果这个指针是 NULL, 系统调用返回 -EINVAL.  
+
+	int (*aio_fsync)(struct kiocb *, int);  
+	//这是 fsync 方法的异步版本.  
+
+	int (*fasync) (int, struct file *, int);  
+	//这个操作用来通知设备它的 FASYNC 标志的改变. 异步通知是一个高级的主题, 在第 6 章中描述. 这个成员可以是NULL 如果驱动不支持异步通知.  
+
+	int (*lock) (struct file *, int, struct file_lock *);  
+	//lock 方法用来实现文件加锁; 加锁对常规文件是必不可少的特性, 但是设备驱动几乎从不实现它.  
+
+	ssize_t (*readv) (struct file *, const struct iovec *, unsigned long, loff_t *);  
+	ssize_t (*writev) (struct file *, const struct iovec *, unsigned long, loff_t *);  
+	//这些方法实现发散/汇聚读和写操作. 应用程序偶尔需要做一个包含多个内存区的单个读或写操作; 这些系统调用允许它们这样做而不必对数据进行额外拷贝. 如果这些函数指针为 NULL, read 和 write 方法被调用( 可能多于一次 ).  
+
+	ssize_t (*sendfile)(struct file *, loff_t *, size_t, read_actor_t, void *);  
+	//这个方法实现 sendfile 系统调用的读, 使用最少的拷贝从一个文件描述符搬移数据到另一个. 例如, 它被一个需要发送文件内容到一个网络连接的 web 服务器使用. 设备驱动常常使 sendfile 为 NULL.  
+
+	ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);  
+	//sendpage 是 sendfile 的另一半; 它由内核调用来发送数据, 一次一页, 到对应的文件. 设备驱动实际上不实现 sendpage.  
+
+	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);  
+	//这个方法的目的是在进程的地址空间找一个合适的位置来映射在底层设备上的内存段中. 这个任务通常由内存管理代码进行; 这个方法存在为了使驱动能强制特殊设备可能有的任何的对齐请求. 大部分驱动可以置这个方法为 NULL.[10]  
+
+	int (*check_flags)(int)  
+		//这个方法允许模块检查传递给 fnctl(F_SETFL...) 调用的标志.  
+
+		int (*dir_notify)(struct file *, unsigned long);  
+	//这个方法在应用程序使用 fcntl 来请求目录改变通知时调用. 只对文件系统有用; 驱动不需要实现 dir_notify.   
+}  
+
+最新的内核此结构体定义为(有部分修改):
+
+struct file_operations {
+	struct module *owner;
+	loff_t (*llseek) (struct file *, loff_t, int);
+	ssize_t (*read) (struct file *, char __user *, size_t, loff_t *);
+	ssize_t (*write) (struct file *, const char __user *, size_t, loff_t *);
+	ssize_t (*read_iter) (struct kiocb *, struct iov_iter *);
+	ssize_t (*write_iter) (struct kiocb *, struct iov_iter *);
+	int (*iterate) (struct file *, struct dir_context *);
+	int (*iterate_shared) (struct file *, struct dir_context *);
+	unsigned int (*poll) (struct file *, struct poll_table_struct *);
+	long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);		/*以前的那个ioctl()被废除了*/
+	long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
+	int (*mmap) (struct file *, struct vm_area_struct *);
+	int (*open) (struct inode *, struct file *);
+	int (*flush) (struct file *, fl_owner_t id);
+	int (*release) (struct inode *, struct file *);
+	int (*fsync) (struct file *, loff_t, loff_t, int datasync);
+	int (*fasync) (int, struct file *, int);
+	int (*lock) (struct file *, int, struct file_lock *);
+	ssize_t (*sendpage) (struct file *, struct page *, int, size_t, loff_t *, int);
+	unsigned long (*get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+	int (*check_flags)(int);
+	int (*flock) (struct file *, int, struct file_lock *);
+	ssize_t (*splice_write)(struct pipe_inode_info *, struct file *, loff_t *, size_t, unsigned int);
+	ssize_t (*splice_read)(struct file *, loff_t *, struct pipe_inode_info *, size_t, unsigned int);
+	int (*setlease)(struct file *, long, struct file_lock **, void **);
+	long (*fallocate)(struct file *file, int mode, loff_t offset,
+			  loff_t len);
+	void (*show_fdinfo)(struct seq_file *m, struct file *f);
+#ifndef CONFIG_MMU
+	unsigned (*mmap_capabilities)(struct file *);
+#endif
+	ssize_t (*copy_file_range)(struct file *, loff_t, struct file *,
+			loff_t, size_t, unsigned int);
+	int (*clone_file_range)(struct file *, loff_t, struct file *, loff_t,
+			u64);
+	ssize_t (*dedupe_file_range)(struct file *, u64, u64, struct file *,
+			u64);
+} __randomize_layout;
+
+scull 设备驱动只实现最重要的设备方法. 它的 file_operations 结构是如下初始化的:  
+struct file_operations scull_fops = {  
+	.owner =  THIS_MODULE,   
+	.llseek =  scull_llseek,   
+	.read =  scull_read,   
+	.write =  scull_write,   
+	.ioctl =  scull_ioctl,   
+	.open =  scull_open,   
+	.release =  scull_release,    
+};    

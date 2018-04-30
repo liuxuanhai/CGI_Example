@@ -1,0 +1,24 @@
+########################################################
+#当命令执行make命令时，将调用Makefile文件，KERNELRELEASE是在内核源码的顶层/usr/src/linux-2.6.30/Makefile文件中
+#定义的一个变量，位置再358行，第一次读取执行此Makefile时，变量$(KERNELRELEASE)没有被设置，因此第一行ifneq的条件失败，从
+#else后面开始执行，设置PWD、KVER和KDIR等变量
+#当make到标号all时，-C $(KDIR)知名跳转到内核源码目录下读取哪里的Makefile.M=$(PWD),表明返回到当前目录继续读入、执行当前
+#的Makefile，也就是第二次调用make。这时的$(KERNELRELEASE)已被定义，因此语句ifneq成功，make将继续读取紧接在ifneq后面的
+#内容。ifneq的内容未kbuild语法的语句，知名模块源码中各文件之间的依赖关系和要生成的目标模块名称。
+#########################################################
+ifneq ($(KERNELRELEASE),)
+mymodule-objs := mymodule1.o mymodule2.o				#依赖关系，生成的驱动依赖的.o
+obj-m := mymodule.o										#编译链接后生成mymodule.ko模块
+
+else
+PWD  := $(shell pwd)  
+       
+KVER ?= $(shell uname -r)  
+KDIR := /usr/src/linux-headers-$(shell uname -r)
+#KDIR := /usr/local/ti-sdk-am335x-evm/board-support/linux-3.2.0-psp05.06.00.00
+all:  
+	$(MAKE) -C $(KDIR) M=$(PWD)			#再次调用make
+#	MAKE_CROSS = $(MAKE) -C $(KDIR) M=$(PWD) m$(EXTRA_CFLAGSS) odules ARCH=arm CROSS_COMPILE=/usr/local/ti-sdk-am335x-evm/linux-devkit/bin/arm-arago-linux-gnueabi- 
+clean:  
+	rm -rf .*.cmd *.o *.mod.c *.ko .tmp_versions *.order *.symvers *~
+endif

@@ -1,0 +1,57 @@
+
+一、makefile里的变量相当于是C语言里的宏定义，在使用时依次展开
+
+EXAMPLE_VAR = example.c
+
+=, := += 区别:
+
+'=' 在给变量赋值时右值是可以不确定的:
+VAR1 = $(VAR2)
+VAR2 = var
+但是这样容易造成递归，无限循环:
+VAR1 = $(VAR2)
+VAR2 = $(VAR1)
+
+':='这个就与上方的不太一样，需要右值是存在的会更安全一些
+'+='就是给变量追加了:
+VAR1 = test.c
+$(VAR1) += test1.c
+
+
+还有一个赋值'?='这个是定义前先判断:
+VAR1 ?= test.c
+如果VAR1被定义过，则什么都不做，等价于:
+ifeq ($(origin VAR1), undefined)
+VAR1 = test.c
+ednif
+
+
+二、subdir是一个目录
+$(MAKE) -C subdir
+等价于:
+cd subdir && make
+嵌套执行 make时，如果想要将变量传递到下层makefile,可以使用export去声明变量
+格式：
+export <variable ...>
+如果不想传递:
+unexport <variable ...>
+
+示例一：
+
+export variable = value
+
+其等价于：
+
+variable = value
+export variable
+
+但是传递下去后的变量你不会覆盖其他makefile已经定义的变量，除非指定了'-e'参数
+
+如果你要传递所有的变量，那么，只要一个 export 就行了。后面什么也不用跟，表示
+传递所有的变量
+
+需要注意的是，有两个变量，一个是 SHELL，一个是 MAKEFLAGS，这两个变量不管你是
+否 export，其总是要传递到下层 Makefile 中，特别是 MAKEFILES 变量，其中包含了 make
+的参数信息，如果我们执行“总控 Makefile”时有 make 参数或是在上层 Makefile 中定义
+了这个变量，那么 MAKEFILES 变量将会是这些参数，并会传递到下层 Makefile 中，这是一
+个系统级的环境变量

@@ -1,0 +1,84 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ACC_DELETE	persion_info.cpp	57;"	d	file:
+ACC_DELETE_AJAX	persion_info.cpp	34;"	d	file:
+ACC_MODIFY	persion_info.cpp	60;"	d	file:
+ACC_MODIFY_AJAX	persion_info.cpp	37;"	d	file:
+ACC_SELECT	persion_info.cpp	54;"	d	file:
+ACC_SELECT_AJAX	persion_info.cpp	31;"	d	file:
+ADD_COLUMN	persion_info.cpp	59;"	d	file:
+ADD_COLUMN_AJAX	persion_info.cpp	36;"	d	file:
+Age	persion_info.cpp	/^	char Age[4];$/;"	m	struct:__anon1	file:
+Age	persion_info.cpp	/^	string Age;$/;"	m	struct:persion_info	file:
+AttriTable	persion_info.cpp	/^static const char *AttriTable[] = {$/;"	v	file:
+AttriTableEn	persion_info.cpp	/^static const char *AttriTableEn[] = {$/;"	v	file:
+BLU_DELETE	persion_info.cpp	58;"	d	file:
+BLU_DELETE_AJAX	persion_info.cpp	35;"	d	file:
+BLU_MODIFY	persion_info.cpp	61;"	d	file:
+BLU_MODIFY_AJAX	persion_info.cpp	38;"	d	file:
+BLU_SELECT	persion_info.cpp	55;"	d	file:
+BLU_SELECT_AJAX	persion_info.cpp	32;"	d	file:
+Birthday	persion_info.cpp	/^	char Birthday[16];$/;"	m	struct:__anon1	file:
+Birthday	persion_info.cpp	/^	string Birthday;$/;"	m	struct:persion_info	file:
+CPP	makefile	/^CPP = g++ $/;"	m
+DB_NAME	persion_info.cpp	52;"	d	file:
+Email	persion_info.cpp	/^	char Email[60];$/;"	m	struct:__anon1	file:
+Email	persion_info.cpp	/^	string Email;$/;"	m	struct:persion_info	file:
+Gender	persion_info.cpp	/^	char Gender[6];$/;"	m	struct:__anon1	file:
+Gender	persion_info.cpp	/^	string Gender;$/;"	m	struct:persion_info	file:
+GetOperMode	persion_info.cpp	/^unsigned char GetOperMode(string opermode)$/;"	f
+Homeaddr	persion_info.cpp	/^	char Homeaddr[1024];$/;"	m	struct:__anon1	file:
+Homeaddr	persion_info.cpp	/^	string Homeaddr;$/;"	m	struct:persion_info	file:
+INSERT_AJAX	persion_info.cpp	33;"	d	file:
+INSERT_DATA	persion_info.cpp	56;"	d	file:
+INSERT_DATA_ERR	persion_info.cpp	45;"	d	file:
+INSERT_HAVE_EMAIL	persion_info.cpp	48;"	d	file:
+INSERT_HAVE_IDCARD	persion_info.cpp	46;"	d	file:
+INSERT_HAVE_PHONE	persion_info.cpp	47;"	d	file:
+Idcard	persion_info.cpp	/^	char Idcard[25];$/;"	m	struct:__anon1	file:
+Idcard	persion_info.cpp	/^	string Idcard;$/;"	m	struct:persion_info	file:
+InsertColumn	persion_info.cpp	/^unsigned char InsertColumn(persion_info sqlrequest)$/;"	f
+LIB	makefile	/^LIB = -lcgicc -lsqlite3 -ljson_linux-gcc-5.4.0_libmt$/;"	m
+NOT_SELECT	persion_info.cpp	63;"	d	file:
+Name	persion_info.cpp	/^	char Name[60];$/;"	m	struct:__anon1	file:
+Name	persion_info.cpp	/^	string Name;$/;"	m	struct:persion_info	file:
+Numbering	persion_info.cpp	/^	char Numbering[64];$/;"	m	struct:__anon1	file:
+Numbering	persion_info.cpp	/^	string Numbering;$/;"	m	struct:persion_info	file:
+OBJS	makefile	/^OBJS = $(SRCS:.cpp=.cgi)$/;"	m
+OPER_CURRECT	persion_info.cpp	41;"	d	file:
+Opermode	persion_info.cpp	/^	char Opermode[30];$/;"	m	struct:__anon1	file:
+Opermode	persion_info.cpp	/^	string Opermode;$/;"	m	struct:persion_info	file:
+PERSION_INFO_C	persion_info.cpp	/^}PERSION_INFO_C;$/;"	t	typeref:struct:__anon1	file:
+POST_JSON_DATA_ERR	persion_info.cpp	64;"	d	file:
+Phonenumber	persion_info.cpp	/^	char Phonenumber[16];$/;"	m	struct:__anon1	file:
+Phonenumber	persion_info.cpp	/^	string Phonenumber;$/;"	m	struct:persion_info	file:
+ReqRes	persion_info.cpp	/^unsigned char ReqRes(unsigned char selectmode, const char *atrr, string condition)$/;"	f
+SAVE_SEARCH	persion_info.cpp	/^}SAVE_SEARCH;$/;"	t	typeref:struct:__anon2	file:
+SELECT_DATA_ERR	persion_info.cpp	43;"	d	file:
+SELECT_DATA_NULL	persion_info.cpp	44;"	d	file:
+SQLITE_OPER_ERR	persion_info.cpp	42;"	d	file:
+SRCS	makefile	/^SRCS = $(wildcard *.cpp) $/;"	m
+SelectInsert	persion_info.cpp	/^unsigned char SelectInsert(unsigned char selectmode, string condition)$/;"	f
+TABLE_END	persion_info.cpp	53;"	d	file:
+TEST_DB_PATH	persion_info.cpp	51;"	d	file:
+TEST_MODE	persion_info.cpp	28;"	d	file:
+UNKNOWN_AJAX	persion_info.cpp	39;"	d	file:
+UNKNOWN_ERR	persion_info.cpp	49;"	d	file:
+_UNKNOWN_	persion_info.cpp	62;"	d	file:
+callback_insert	persion_info.cpp	/^static int callback_insert(void *data, int argc, char **argv, char **azColName)$/;"	f	file:
+callback_select	persion_info.cpp	/^static int callback_select(void *data, int argc, char **argv, char **azColName)$/;"	f	file:
+getinsertcolumn	persion_info.cpp	/^static char getinsertcolumn = 0;$/;"	v	file:
+main	persion_info.cpp	/^int main(int argc, char **argv)$/;"	f
+main	test.cpp	/^int main()$/;"	f
+numbering	persion_info.cpp	/^	char numbering[1024][64];$/;"	m	struct:__anon2	file:
+persion_info	persion_info.cpp	/^struct persion_info{$/;"	s	file:
+pos	persion_info.cpp	/^static unsigned int pos = 0;$/;"	v	file:
+result	persion_info.cpp	/^static unsigned int result = 0 ;$/;"	v	file:
+save_search_info	persion_info.cpp	/^static SAVE_SEARCH save_search_info;$/;"	v	file:
+selRes	persion_info.cpp	/^static PERSION_INFO_C selRes[1024];$/;"	v	file:
+selectDataMib	persion_info.cpp	/^unsigned char selectDataMib(unsigned char selectmode, string request, string attri, string condition)$/;"	f
+tatol	persion_info.cpp	/^	unsigned int tatol;$/;"	m	struct:__anon2	file:

@@ -1,0 +1,133 @@
+#!/usr/bin/python
+# coding=utf-8
+"""
+Python数学函数
+函数返回值 ( 描述 )abs(x)返回数字的绝对值，如abs(-10) 返回 10ceil(x)返回数字的上入整数，如math.ceil(4.1) 返回 5cmp(x, y)如果 x < y 返回 -1, 如果 x == y 返回 0, 如果 x > y 返回 1exp(x)返回e的x次幂(ex),如math.exp(1) 返回2.718281828459045fabs(x)返回数字的绝对值，如math.fabs(-10) 返回10.0floor(x)返回数字的下舍整数，如math.floor(4.9)返回 4log(x)如math.log(math.e)返回1.0,math.log(100,10)返回2.0log10(x)返回以10为基数的x的对数，如math.log10(100)返回 2.0max(x1, x2,...)返回给定参数的最大值，参数可以为序列。min(x1, x2,...)返回给定参数的最小值，参数可以为序列。modf(x)返回x的整数部分与小数部分，两部分的数值符号与x相同，整数部分以浮点型表示。pow(x, y)x**y 运算后的值。round(x [,n])返回浮点数x的四舍五入值，如给出n值，则代表舍入到小数点后的位数。sqrt(x)返回数字x的平方根
+
+Python Number 类型转换
+int(x [,base ])         将x转换为一个整数  
+long(x [,base ])        将x转换为一个长整数  
+float(x )               将x转换到一个浮点数  
+complex(real [,imag ])  创建一个复数  
+str(x )                 将对象 x 转换为字符串  
+repr(x )                将对象 x 转换为表达式字符串  
+eval(str )              用来计算在字符串中的有效Python表达式,并返回一个对象  
+tuple(s )               将序列 s 转换为一个元组  
+list(s )                将序列 s 转换为一个列表  
+chr(x )                 将一个整数转换为一个字符  
+unichr(x )              将一个整数转换为Unicode字符  
+ord(x )                 将一个字符转换为它的整数值  
+hex(x )                 将一个整数转换为一个十六进制字符串  
+oct(x )                 将一个整数转换为一个八进制字符串  
+
+Python随机数函数
+随机数可以用于数学，游戏，安全等领域中，还经常被嵌入到算法中，用以提高算法效率，并提高程序的安全性。
+Python包含以下常用随机数函数：
+函数描述choice(seq)从序列的元素中随机挑选一个元素，比如random.choice(range(10))，从0到9中随机挑选一个整数。randrange ([start,] stop [,step])从指定范围内，按指定基数递增的集合中获取一个随机数，基数缺省值为1random()随机生成下一个实数，它在[0,1)范围内。seed([x])改变随机数生成器的种子seed。如果你不了解其原理，你不必特别去设定seed，Python会帮你选择seed。shuffle(lst)将序列的所有元素随机排序uniform(x, y)随机生成下一个实数，它在[x,y]范围内。
+
+Python三角函数
+Python包括以下三角函数：
+函数描述acos(x)返回x的反余弦弧度值。asin(x)返回x的反正弦弧度值。atan(x)返回x的反正切弧度值。atan2(y, x)返回给定的 X 及 Y 坐标值的反正切值。cos(x)返回x的弧度的余弦值。hypot(x, y)返回欧几里德范数 sqrt(x*x + y*y)。sin(x)返回的x弧度的正弦值。tan(x)返回x弧度的正切值。degrees(x)将弧度转换为角度,如degrees(math.pi/2) ， 返回90.0radians(x)将角度转换为弧度
+
+--------------------------------------------------------------------------------
+Python数学常量
+常量描述pi数学常量 pi（圆周率，一般以π来表示）e数学常量 e，e即自然常数（自然常数）。
+
+Python转义字符
+在需要在字符中使用特殊字符时，python用反斜杠(\)转义字符。如下表：
+		转义字符描述\(在行尾时)续行符\\反斜杠符号\'单引号\"双引号\a响铃\b退格(Backspace)\e转义\000空\n换行\v纵向制表符\t横向制表符\r回车\f换页\oyy八进制数，yy代表的字符，例如：\o12代表换行\xyy十六进制数，yy代表的字符，例如：\x0a代表换行\other其它的字符以普通格式输出
+
+Python字符串运算符
+下表实例变量 a 值为字符串 "Hello"，b 变量值为 "Python"：
+操作符描述实例+字符串连接>>>a + b 'HelloPython'*重复输出字符串>>>a * 2 'HelloHello'[]通过索引获取字符串中字符>>>a[1] 'e'[ : ]截取字符串中的一部分>>>a[1:4] 'ell'in成员运算符 - 如果字符串中包含给定的字符返回 True>>>"H" in a Truenot in成员运算符 - 如果字符串中不包含给定的字符返回 True>>>"M" not in a Truer/R原始字符串 - 原始字符串：所有的字符串都是直接按照字面的意思来使用，没有转义特殊或不能打印的字符。 原始字符串除在字符串的第一个引号前加上字母"r"（可以大小写）以外，与普通字符串有着几乎完全相同的语法。>>>print r'\n' \n >>> print R'\n' \n%格式字符串请看下一章节
+
+Python 字符串格式化
+Python 支持格式化字符串的输出 。尽管这样可能会用到非常复杂的表达式，但最基本的用法是将一个值插入到一个有字符串格式符 %s 的字符串中。
+在 Python 中，字符串格式化使用与 C 中 sprintf 函数一样的语法。
+如下实例：
+#!/usr/bin/python
+
+print "My name is %s and weight is %d kg!" % ('Zara', 21) 
+以上实例输出结果：
+My name is Zara and weight is 21 kg!
+python字符串格式化符号:
+符 号描述%c格式化字符及其ASCII码%s格式化字符串%d格式化整数%u格式化无符号整型%o格式化无符号八进制数%x格式化无符号十六进制数%X格式化无符号十六进制数（大写）%f格式化浮点数字，可指定小数点后的精度%e用科学计数法格式化浮点数%E作用同%e，用科学计数法格式化浮点数%g%f和%e的简写%G%f 和 %E 的简写%p用十六进制数格式化变量的地址
+格式化操作符辅助指令:
+符号功能*定义宽度或者小数点精度-用做左对齐+在正数前面显示加号( + )<sp>在正数前面显示空格#在八进制数前面显示零('0')，在十六进制前面显示'0x'或者'0X'(取决于用的是'x'还是'X')0显示的数字前面填充'0'而不是默认的空格%'%%'输出一个单一的'%'(var)映射变量(字典参数)m.n.m 是显示的最小总宽度,n 是小数点后的位数(如果可用的话)
+Python2.6 开始，新增了一种格式化字符串的函数 str.format()，它增强了字符串格式化的功能。
+
+Unicode 字符串
+Python 中定义一个 Unicode 字符串和定义一个普通字符串一样简单：
+>>> u'Hello World !'
+u'Hello World !'
+引号前小写的"u"表示这里创建的是一个 Unicode 字符串。如果你想加入一个特殊字符，可以使用 Python 的 Unicode-Escape 编码。如下例所示：
+>>> u'Hello\u0020World !'
+u'Hello World !'
+被替换的 \u0020 标识表示在给定位置插入编码值为 0x0020 的 Unicode 字符（空格符）。
+Python三引号（triple quotes）
+python中三引号可以将复杂的字符串进行复制:
+python三引号允许一个字符串跨多行，字符串中可以包含换行符、制表符以及其他特殊字符。
+在编写sql语句时很方便
+
+python的字符串内建函数
+字符串方法是从python1.6到2.0慢慢加进来的——它们也被加到了Jython中。
+这些方法实现了string模块的大部分方法，如下表所示列出了目前字符串内建支持的方法，所有的方法都包含了对Unicode的支持，有一些甚至是专门用于Unicode的。
+方法描述string.capitalize()把字符串的第一个字符大写string.center(width)返回一个原字符串居中,并使用空格填充至长度 width 的新字符串string.count(str, beg=0, end=len(string))返回 str 在 string 里面出现的次数，如果 beg 或者 end 指定则返回指定范围内 str 出现的次数string.decode(encoding='UTF-8', errors='strict')以 encoding 指定的编码格式解码 string，如果出错默认报一个 ValueError 的 异 常 ， 除 非 errors 指 定 的 是 'ignore' 或 者'replace'string.encode(encoding='UTF-8', errors='strict')以 encoding 指定的编码格式编码 string，如果出错默认报一个ValueError 的异常，除非 errors 指定的是'ignore'或者'replace'string.endswith(obj, beg=0, end=len(string))检查字符串是否以 obj 结束，如果beg 或者 end 指定则检查指定的范围内是否以 obj 结束，如果是，返回 True,否则返回 False.string.expandtabs(tabsize=8)把字符串 string 中的 tab 符号转为空格，tab 符号默认的空格数是 8。string.find(str, beg=0, end=len(string))检测 str 是否包含在 string 中，如果 beg 和 end 指定范围，则检查是否包含在指定范围内，如果是返回开始的索引值，否则返回-1string.format()格式化字符串string.index(str, beg=0, end=len(string))跟find()方法一样，只不过如果str不在 string中会报一个异常.string.isalnum()如果 string 至少有一个字符并且所有字符都是字母或数字则返
+回 True,否则返回 Falsestring.isalpha()如果 string 至少有一个字符并且所有字符都是字母则返回 True,
+	否则返回 Falsestring.isdecimal()如果 string 只包含十进制数字则返回 True 否则返回 False.string.isdigit()如果 string 只包含数字则返回 True 否则返回 False.string.islower()如果 string 中包含至少一个区分大小写的字符，并且所有这些(区分大小写的)字符都是小写，则返回 True，否则返回 Falsestring.isnumeric()如果 string 中只包含数字字符，则返回 True，否则返回 Falsestring.isspace()如果 string 中只包含空格，则返回 True，否则返回 False.string.istitle()如果 string 是标题化的(见 title())则返回 True，否则返回 Falsestring.isupper()如果 string 中包含至少一个区分大小写的字符，并且所有这些(区分大小写的)字符都是大写，则返回 True，否则返回 Falsestring.join(seq)以 string 作为分隔符，将 seq 中所有的元素(的字符串表示)合并为一个新的字符串string.ljust(width)返回一个原字符串左对齐,并使用空格填充至长度 width 的新字符串string.lower()转换 string 中所有大写字符为小写.string.lstrip()截掉 string 左边的空格string.maketrans(intab, outtab])maketrans() 方法用于创建字符映射的转换表，对于接受两个参数的最简单的调用方式，第一个参数是字符串，表示需要转换的字符，第二个参数也是字符串表示转换的目标。max(str)返回字符串 str 中最大的字母。min(str)返回字符串 str 中最小的字母。string.partition(str)有点像 find()和 split()的结合体,从 str 出现的第一个位置起,把 字 符 串 string 分 成 一 个 3 元 素 的 元 组 (string_pre_str,str,string_post_str),如果 string 中不包含str 则 string_pre_str == string.string.replace(str1, str2, num=string.count(str1))把 string 中的 str1 替换成 str2,如果 num 指定，则替换不超过 num 次.string.rfind(str, beg=0,end=len(string) )类似于 find()函数，不过是从右边开始查找.string.rindex( str, beg=0,end=len(string))类似于 index()，不过是从右边开始.string.rjust(width)返回一个原字符串右对齐,并使用空格填充至长度 width 的新字符串string.rpartition(str)类似于 partition()函数,不过是从右边开始查找.string.rstrip()删除 string 字符串末尾的空格.string.split(str="", num=string.count(str))以 str 为分隔符切片 string，如果 num有指定值，则仅分隔 num 个子字符串string.splitlines([keepends])按照行('\r', '\r\n', \n')分隔，返回一个包含各行作为元素的列表，如果参数 keepends 为 False，不包含换行符，如果为 True，则保留换行符。string.startswith(obj, beg=0,end=len(string))检查字符串是否是以 obj 开头，是则返回 True，否则返回 False。如果beg 和 end 指定值，则在指定范围内检查.string.strip([obj])在 string 上执行 lstrip()和 rstrip()string.swapcase()翻转 string 中的大小写string.title()返回"标题化"的 string,就是说所有单词都是以大写开始，其余字母均为小写(见 istitle())string.translate(str, del="")根据 str 给出的表(包含 256 个字符)转换 string 的字符,要过滤掉的字符放到 del 参数中string.upper()转换 string 中的小写字母为大写string.zfill(width)返回长度为 width 的字符串，原字符串 string 右对齐，前面填充0string.isdecimal()isdecimal()方法检查字符串是否只包含十进制字符。这种方法只存在于unicode对象。
+
+	Python列表函数&方法
+	Python包含以下函数:
+	序号函数1cmp(list1, list2)
+	比较两个列表的元素2len(list)
+	列表元素个数3max(list)
+	返回列表元素最大值4min(list)
+	返回列表元素最小值5list(seq)
+	将元组转换为列表
+	Python包含以下方法:
+	序号方法1list.append(obj)
+	在列表末尾添加新的对象2list.count(obj)
+	统计某个元素在列表中出现的次数3list.extend(seq)
+	在列表末尾一次性追加另一个序列中的多个值（用新列表扩展原来的列表）4list.index(obj)
+	从列表中找出某个值第一个匹配项的索引位置5list.insert(index, obj)
+	将对象插入列表6list.pop(obj=list[-1])
+	移除列表中的一个元素（默认最后一个元素），并且返回该元素的值7list.remove(obj)
+	移除列表中某个值的第一个匹配项8list.reverse()
+	反向列表中元素9list.sort([func])
+	对原列表进行排序
+
+	多维列表的操作
+
+
+	元组内置函数
+	Python元组包含了以下内置函数
+	序号方法及描述1cmp(tuple1, tuple2)
+	比较两个元组元素。2len(tuple)
+	计算元组元素个数。3max(tuple)
+	返回元组中元素最大值。4min(tuple)
+	返回元组中元素最小值。5tuple(seq)
+	将列表转换为元组。
+
+	字典内置函数&方法
+	Python字典包含了以下内置函数：
+	序号函数及描述1cmp(dict1, dict2)
+	比较两个字典元素。2len(dict)
+	计算字典元素个数，即键的总数。3str(dict)
+	输出字典可打印的字符串表示。4type(variable)
+	返回输入的变量类型，如果变量是字典就返回字典类型。
+	Python字典包含了以下内置方法：
+	序号函数及描述1dict.clear()
+	删除字典内所有元素2dict.copy()
+	返回一个字典的浅复制3dict.fromkeys(seq[, val]))
+	创建一个新字典，以序列 seq 中元素做字典的键，val 为字典所有键对应的初始值4dict.get(key, default=None)
+	返回指定键的值，如果值不在字典中返回default值5dict.has_key(key)
+	如果键在字典dict里返回true，否则返回false6dict.items()
+	以列表返回可遍历的(键, 值) 元组数组7dict.keys()
+	以列表返回一个字典所有的键8dict.setdefault(key, default=None)
+	和get()类似, 但如果键不存在于字典中，将会添加键并将值设为default9dict.update(dict2)
+	把字典dict2的键/值对更新到dict里10dict.values()
+	以列表返回字典中的所有值11pop(key[,default])
+	删除字典给定键 key 所对应的值，返回值为被删除的值。key值必须给出。 否则，返回default值。12popitem()
+	随机返回并删除字典中的一对键和值。
+
+"""

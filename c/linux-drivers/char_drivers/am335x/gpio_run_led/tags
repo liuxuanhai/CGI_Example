@@ -1,0 +1,37 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+GPIO2	pri_gpio_driver.c	29;"	d	file:
+GPIO2_30	pri_gpio_driver.c	52;"	d	file:
+GPIO2_31	pri_gpio_driver.c	53;"	d	file:
+GPIO2_DATAOUT	pri_gpio_driver.c	34;"	d	file:
+GPIO2_OE	pri_gpio_driver.c	31;"	d	file:
+GPIO_PIN	pri_gpio_driver.c	51;"	d	file:
+INPUT	pri_gpio_driver.c	46;"	d	file:
+KDIR	Makefile	/^KDIR := \/usr\/local\/ti-sdk-am335x-evm\/board-support\/linux-3.2.0-psp05.06.00.00$/;"	m
+MODE_1_EN	pri_gpio_driver.c	27;"	d	file:
+OUTPUT	pri_gpio_driver.c	47;"	d	file:
+PRI_GPIO_MAJOR	pri_gpio_driver.c	55;"	d	file:
+PWD	Makefile	/^PWD  := $(shell pwd)  $/;"	m
+__this_module	pri_gpio_driver.mod.c	/^struct module __this_module$/;"	v	typeref:struct:module
+__used	pri_gpio_driver.mod.c	/^__used$/;"	v	file:
+__used	pri_gpio_driver.mod.c	/^__used$/;"	v	typeref:struct:____versions	file:
+cdev	pri_gpio_driver.c	/^static struct cdev cdev;$/;"	v	typeref:struct:cdev	file:
+class	pri_gpio_driver.c	/^static struct class *class;$/;"	v	typeref:struct:class	file:
+fops	pri_gpio_driver.c	/^static struct file_operations fops = {$/;"	v	typeref:struct:file_operations	file:
+mymodule-objs	Makefile	/^mymodule-objs := pri_gpio_driver.o $/;"	m
+obj-m	Makefile	/^obj-m := pri_gpio_driver.o $/;"	m
+pri_gpio_exit	pri_gpio_driver.c	/^module_exit(pri_gpio_exit);$/;"	v
+pri_gpio_exit	pri_gpio_driver.c	/^static void pri_gpio_exit(void)$/;"	f	file:
+pri_gpio_init	pri_gpio_driver.c	/^module_init(pri_gpio_init);$/;"	v
+pri_gpio_init	pri_gpio_driver.c	/^static int pri_gpio_init(void)$/;"	f	file:
+pri_gpio_major	pri_gpio_driver.c	/^static int pri_gpio_major = PRI_GPIO_MAJOR;$/;"	v	file:
+pri_gpio_open	pri_gpio_driver.c	/^static int pri_gpio_open(struct inode *inode, struct file *filp)$/;"	f	file:
+pri_gpio_read	pri_gpio_driver.c	/^static ssize_t pri_gpio_read(struct file *filp, char __user *val, size_t pin, loff_t *f_pos)$/;"	f	file:
+pri_gpio_release	pri_gpio_driver.c	/^static int pri_gpio_release(struct inode *inode, struct file *filp)$/;"	f	file:
+pri_gpio_setup	pri_gpio_driver.c	/^static void pri_gpio_setup(void)$/;"	f	file:
+pri_gpio_unlocked_ioctl	pri_gpio_driver.c	/^static long pri_gpio_unlocked_ioctl(struct file *filp, unsigned int in_out, unsigned long pin)$/;"	f	file:
+pri_gpio_write	pri_gpio_driver.c	/^static ssize_t pri_gpio_write(struct file *filp, const char __user *val, size_t pin, loff_t *fpos)$/;"	f	file:
