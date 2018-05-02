@@ -23,10 +23,10 @@
 size:申请的内存大小
 return:内存首地址
  */
-void *m_memory_alloc(uint32_t size)
+void *m_memory_alloc(unsigned int size)
 {
 	void *addr;
-    int32_t memcount = 200*1000;    /* 1秒钟申请不到返回 */
+    int memcount = 200*1000;    /* 1秒钟申请不到返回 */
 	while((addr = malloc(size)) == NULL)
 	{
         if(!memcount)
@@ -46,7 +46,7 @@ addr:新内存首地址
 len:需要保存的内存内容长度
 return:新内存首地址
  */
-void *m_memory_realloc(uint32_t new_size, void *old, void *addr, uint32_t len)
+void *m_memory_realloc(unsigned int new_size, void *old, void *addr, unsigned int len)
 {
 	void *new_ptr;
 	if(NULL == (new_ptr = m_memory_alloc(new_size)))
@@ -65,12 +65,12 @@ cmd:命令名称
 args:命令参数
 return:执行结果返回
  */
-uint8_t  m_system_cmd(const int8_t *cmd, const int8_t *args)
+unsigned char  m_system_cmd(const char *cmd, const char *args)
 {
 	if(cmd == NULL)
 		return false;
 	pid_t status;
-	int8_t cmd_or_output[255];
+	char cmd_or_output[255];
 	memset(cmd_or_output, 0, sizeof(cmd_or_output));
 	if(NULL != args)
 		sprintf(cmd_or_output, "%s %s", cmd, args);
@@ -121,7 +121,7 @@ void m_system_reboot(void)
 		m_system_cmd("reboot now", NULL);
 	}
 }
-static const uint16_t s_crc16_table[] = {
+static const unsigned short s_crc16_table[] = {
 	0x0000, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
 	0x8108, 0x9129, 0xa14a, 0xb16b, 0xc18c, 0xd1ad, 0xe1ce, 0xf1ef,
 	0x1231, 0x0210, 0x3273, 0x2252, 0x52b5, 0x4294, 0x72f7, 0x62d6,
@@ -161,12 +161,14 @@ static const uint16_t s_crc16_table[] = {
  * len:校验数据长度
  * return:校验码
  * */
-uint16_t m_calculate_crc16(uint16_t crc, uint8_t *ptr, uint32_t len)
+unsigned short m_calculate_crc16(unsigned short crc, unsigned char *ptr, unsigned int len)
 {
-    if(len <= 0 || NULL == ptr)
-        return false;
-	uint8_t temp;
+	unsigned char temp;
 
+    if(len <= 0 || NULL == ptr)
+    {
+        return false;
+    }
 	for( ; len--; ptr++)
 	{
 		temp = crc / 256;
@@ -176,9 +178,9 @@ uint16_t m_calculate_crc16(uint16_t crc, uint8_t *ptr, uint32_t len)
 	return crc;
 }
 /* 多个字节转换成无符号整型数 */
-uint32_t s_byte_to_int(const uint8_t *byte, uint32_t len)
+unsigned int s_byte_to_int(const unsigned char *byte, unsigned int len)
 {
-	uint32_t tmp;
+	unsigned int tmp;
 
 	if(len > 4)
 	{
@@ -192,9 +194,9 @@ uint32_t s_byte_to_int(const uint8_t *byte, uint32_t len)
 }
 
 /* 多个字节转换成有符号整型数 */
-int32_t s_byte_to_sint(const uint8_t *byte, uint32_t len)
+int s_byte_to_sint(const unsigned char *byte, unsigned int len)
 {
-	uint32_t tmp;
+	unsigned int tmp;
 
 	if(len > 4)
 	{

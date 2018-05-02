@@ -22,22 +22,22 @@
 #include "fileoperation.h"
 #include "syslog.h"
 
-static int32_t s_syslog_program_notime_fd = -1;
-static int32_t s_syslog_program_time_fd = -1;
-static int32_t s_syslog_heart_fd = -1;
+static int s_syslog_program_notime_fd = -1;
+static int s_syslog_program_time_fd = -1;
+static int s_syslog_heart_fd = -1;
 
 static pthread_mutex_t s_syslog_program_notime_lock = PTHREAD_MUTEX_INITIALIZER;			/* 锁 */
 static pthread_mutex_t s_syslog_program_time_lock = PTHREAD_MUTEX_INITIALIZER;				/* 锁 */
 static pthread_mutex_t s_syslog_heart_lock = PTHREAD_MUTEX_INITIALIZER;				/* 锁 */
 
 /*
-static int32_t *s_system_logfd[] = {
+static int *s_system_logfd[] = {
 	&s_syslog_program_notime_fd, 
 	&s_syslog_program_time_fd,
 	&s_syslog_heart_fd,
 	NULL
 };
-static const int8_t *s_system_logfile[] = {
+static const char *s_system_logfile[] = {
 	SYS_PROG_LOG_ERR_NO_TIME,  
 	SYS_PROG_LOG_ERR_TIME,  
 	SYS_LOG_HEART,
@@ -51,16 +51,16 @@ static pthread_mutex_t *s_system_loglock[] = {
 };
 */
 typedef struct {
-    int32_t *fd;
+    int *fd;
     pthread_mutex_t *lock;
-    const int8_t *filename;
+    const char *filename;
 }s_class_system_loghandle;
 
 static s_class_system_loghandle s_system_logfile_handle[] = {
     { &s_syslog_program_notime_fd,      &s_syslog_program_notime_lock,      SYS_PROG_LOG_ERR_NO_TIME },
     { &s_syslog_program_time_fd,        &s_syslog_program_time_lock,        SYS_PROG_LOG_ERR_TIME },
     { &s_syslog_heart_fd,               &s_syslog_heart_lock,               SYS_LOG_HEART },
-    NULL
+    {NULL}
 };
 
 /*
@@ -71,7 +71,7 @@ static s_class_system_loghandle s_system_logfile_handle[] = {
 	正确=字符缓存的长度
 	错误=FALSE
  */
-int32_t m_system_error_standard(int8_t *str, int8_t  *file, const int8_t *fun, uint32_t line)
+int m_system_error_standard(char *str, char  *file, const char *fun, unsigned int line)
 {
 	if((NULL == str) \
 		|| (NULL == file) \
@@ -80,20 +80,20 @@ int32_t m_system_error_standard(int8_t *str, int8_t  *file, const int8_t *fun, u
 	{
 		return false;
 	}
-	return sprintf(str, "File:%s; Function:%s; Line:%d; Error:", file, fun, line);
+	return sprintf((char *)str, "File:%s; Function:%s; Line:%d; Error:", file, fun, line);
 }
 
 /*不带时间的日志*/
-void m_system_log_notime(int8_t *errStr)
+void m_system_log_notime(char *errStr)
 {
 	if(c_appendstr_tofile(s_syslog_program_notime_fd, "\n", &s_syslog_program_notime_lock) == false)
 		return;
 	c_appendstr_tofile(s_syslog_program_notime_fd, errStr, &s_syslog_program_notime_lock);
 }
 /*带有时间的日志*/
-void m_system_log_time(int8_t *errStr)
+void m_system_log_time(char *errStr)
 {
-	int8_t timeStr[SYS_TIME_STR_LEN];
+	char timeStr[SYS_TIME_STR_LEN];
 	/*获取时间*/
 	if(NULL == m_getostimestr(timeStr))
 	{
@@ -115,8 +115,8 @@ void m_system_log_time(int8_t *errStr)
  */
 void m_system_heart_log(void)
 {
-	int8_t *ptr = "\n[m_system_heart_log]: <Normal> ";
-	int8_t timeStr[SYS_TIME_STR_LEN];
+	char *ptr = "\n[m_system_heart_log]: <Normal> ";
+	char timeStr[SYS_TIME_STR_LEN];
 	/*获取时间*/
 	if(NULL == m_getostimestr(timeStr))
 	{
@@ -138,7 +138,7 @@ void m_system_heart_log(void)
 void m_check_system_log(void)
 {
 	struct stat st;
-	int32_t i = 0;
+	int i = 0;
 	for(i = 0; NULL != s_system_logfile_handle[i].fd; i++)
 	{
 		memset(&st, 0, sizeof(struct stat));
@@ -153,9 +153,9 @@ void m_check_system_log(void)
 	}
 }
 
-uint8_t m_system_log_initialize(void)
+unsigned char m_system_log_initialize(void)
 {
-    int32_t index = 0;
+    int index = 0;
     for(; NULL != s_system_logfile_handle[index].fd; index++)
     {
         if((*s_system_logfile_handle[index].fd = open(s_system_logfile_handle[index].filename, O_CREAT|O_WRONLY|O_APPEND)) < 0)
@@ -169,7 +169,7 @@ uint8_t m_system_log_initialize(void)
 
 void m_close_system_log(void)
 {
-    int32_t index = 0;
+    int index = 0;
     for(; NULL != s_system_logfile_handle[index].fd; index++)
     {
 	    close(*s_system_logfile_handle[index].fd);

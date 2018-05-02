@@ -24,13 +24,13 @@ enum {
 };
 
 /* 任务注册 */
-void c_task_register(uint8_t id, const int8_t *name, uint32_t life);
+void c_task_register(unsigned char id, const char *name, unsigned int life);
 /* 任务更新 */
-void c_task_update(uint8_t id);
+void c_task_update(unsigned char id);
 /* 任务池检测 */
 void c_check_task_queue(void);
 
-uint8_t c_system_initialize(void);
+unsigned char c_system_initialize(void);
 void c_system_main_task(void);
 void c_task_exit();
 

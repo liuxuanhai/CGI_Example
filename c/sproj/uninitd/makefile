@@ -3,13 +3,6 @@ CC = gcc
 
 LIB = -ldl -lm -lpthread 
 
-CFLAGS=
-#-I. `./netsnmplib/bin/net-snmp-config --cflags` 
-BUILDAGENTLIBS=
-#=`./netsnmplib/bin/net-snmp-config --agent-libs`
-
-# -Wall 生成所有警告信息
-#CFLAG = -Wall -O2 -w
 CFLAG = -Wall 
 PROJECT = LinuxPlatServer
 

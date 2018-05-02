@@ -8,6 +8,7 @@
 
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <inttypes.h>
 #include <string.h>
 #include <unistd.h>
@@ -17,9 +18,8 @@
 #include "../../module/timer/timer.h"
 #include "fileoperation.h"
 
-static int32_t ssys_confini_fd = -1;
 
-uint8_t c_appendstr_tofile(int32_t fd, int8_t *str, pthread_mutex_t *lock)
+unsigned char c_appendstr_tofile(int fd, char *str, pthread_mutex_t *lock)
 {
 	if((fd < 0) \
 		|| (str == NULL) \
@@ -27,10 +27,10 @@ uint8_t c_appendstr_tofile(int32_t fd, int8_t *str, pthread_mutex_t *lock)
 	{
 		return false;
 	}
-	uint32_t time;
-	int32_t ret = 0;
-	uint32_t total = 0;
-	uint32_t len = strlen(str);
+	uint time;
+	int ret = 0;
+	uint total = 0;
+	uint len = strlen((char *)str);
 	pthread_mutex_lock(lock);
 	time = m_getostime();
 	do{
@@ -49,16 +49,6 @@ uint8_t c_appendstr_tofile(int32_t fd, int8_t *str, pthread_mutex_t *lock)
 	{
 		return false;
 	}
-	return true;
-}
-/* 读取配置文件 */
-uint8_t c_getsys_confini(int8_t *section, int8_t *keyId, int8_t *buf, uint32_t len, uint8_t type)
-{
-	return true;
-}
-/* 写入配置文件 */
-uint8_t c_setsys_confini(int8_t *section, int8_t *keyId, int8_t *buf, uint32_t len, uint8_t type)
-{
 	return true;
 }
 

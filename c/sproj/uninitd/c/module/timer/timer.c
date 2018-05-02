@@ -18,16 +18,19 @@
 
 static pthread_mutex_t s_time_lock = PTHREAD_MUTEX_INITIALIZER;			/* 时间读取锁 */
 
-static  const int8_t *const wday_zh[] = {"星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
-static  const int8_t *const wday_en[] = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
+#if CUR_LANG_ZH
+static  const char *const wday_zh[] = {"星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
+#else
+static  const char *const wday_en[] = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
+#endif
 
 /*
  获取的是时间,微秒级别
  返回值:当前秒数
  */
-uint32_t m_getostime(void)
+unsigned int m_getostime(void)
 {
-	uint32_t tick;
+	unsigned int tick;
 	struct timeval tv;
 
 	pthread_mutex_lock(&s_time_lock);
@@ -41,7 +44,7 @@ uint32_t m_getostime(void)
  指定延时
 tick:延时时间(一个tick 5微秒)
  */
-void m_ostime_delay(uint32_t tick)
+void m_ostime_delay(unsigned int tick)
 {
 	struct timespec tv;
 
@@ -66,14 +69,14 @@ struct tm *m_getostime_format(struct tm *tm)
 	return tm;
 }
 
-static int8_t *s_time_strformat(struct tm *tm, int8_t *str)
+static char *s_time_strformat(struct tm *tm, char *str)
 {
     if((NULL == tm) || (NULL == str))
     {
         return NULL;
     }
 #if CUR_LANG_ZH
-	sprintf(str, "%d年 %d月 %d日 %s %d:%d:%d\n", \
+	sprintf((char *)str, "%d年 %d月 %d日 %s %d:%d:%d\n", \
 			tm->tm_year + 1900, \
 			tm->tm_mon + 1, \
 			tm->tm_mday, \
@@ -82,7 +85,7 @@ static int8_t *s_time_strformat(struct tm *tm, int8_t *str)
 			tm->tm_min, \
 			tm->tm_sec);
 #else
-	sprintf(str, "%d %d %d %s %d:%d:%d\n", \
+	sprintf((char *)str, "%d %d %d %s %d:%d:%d\n", \
 			tm->tm_year + 1900, \
 			tm->tm_mon + 1, \
 			tm->tm_mday, \
@@ -98,12 +101,12 @@ static int8_t *s_time_strformat(struct tm *tm, int8_t *str)
 /*
  返回时间字符串
  */
-int8_t *m_getostimestr(int8_t *str)
+char *m_getostimestr(char *str)
 {
 	if(str == NULL)
 		return NULL;
-	struct tm *tm;
-    return s_time_strformat(m_getostime_format(tm), str);
+	struct tm tm;
+    return s_time_strformat(m_getostime_format(&tm), str);
 }
 
 /*
@@ -111,12 +114,12 @@ int8_t *m_getostimestr(int8_t *str)
  */
 void m_print_ostime(void)
 {
-    int8_t str[1024];
+    char str[1024];
     printf("%s", m_getostimestr(str));
 }
 
 /* 打印一个月的月历 */
-void m_print_monthly(uint8_t month)
+void m_print_monthly(unsigned char month)
 {
     return;
 }
@@ -136,7 +139,7 @@ void m_print_calendar(uint16_t year)
 
 #if __main__
 
-int32_t main()
+int main()
 {
     m_print_ostime();
     return 0;

@@ -22,17 +22,17 @@
 #define MASTER_UDP_SERVER_PORT				111314					/* 主服务器UDP端口号 */
 #define CGI_UDP_CLIENT_PORT					111315					/* 主服务器UDP端口号 */
 /* UDP数据解析 */
-void m_unpack_udpdata(int8_t *data, int32_t len, int8_t *ip, uint16_t port);
+void m_unpack_udpdata(char *data, int len, char *ip, unsigned short port);
 /* UDP 套接字创建 */
-int32_t m_udpsock_create(int8_t *eth, int8_t *ip, uint16_t port, uint32_t sendtime, uint32_t recvtime);
+int m_udpsock_create(char *eth, char *ip, unsigned short port, unsigned int sendtime, unsigned int recvtime);
 /* UDP发送 */
-int32_t m_udpsock_send(int32_t fd, int8_t *ip, uint16_t port, int8_t *data, uint32_t len);
+int m_udpsock_send(int fd, char *ip, unsigned short port, char *data, unsigned int len);
 
 /* UDP数据解析 */
-void m_unpack_tcpdata(int8_t *data, int32_t len, int8_t *ip, uint16_t port);
+void m_unpack_tcpdata(char *data, int len, char *ip, unsigned short port);
 
 /* 数据类型解析 */
-void m_unpack_netdata(int8_t *data, int32_t len, int8_t *ip, uint16_t port);
+void m_unpack_netdata(char *data, int len, char *ip, unsigned short port);
 
 #endif
 

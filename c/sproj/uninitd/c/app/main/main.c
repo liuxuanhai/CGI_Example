@@ -12,9 +12,9 @@
 
 #include "../../common/systemtask/systask.h"
 
-int32_t main(int32_t argc, int8_t **argv)
+int main(int argc, char **argv)
 {
-	int8_t os_name[125];
+	char os_name[125];
 	gethostname(os_name, sizeof(os_name));
 	printf("#########################Welcome to %s##########################################\n", os_name);
 	printf("##########################Start Server Init, please waiting#####################\n");

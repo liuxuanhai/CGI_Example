@@ -16,7 +16,7 @@
 #define GROUP_NUM(g, s)						(((g) + (s) - 1) / (s))						/* g:总个数, s:每组大小, 返回:分组数 */
 #define MAXNUM(x, y)						(((x) > (y)) ? (x) : (y))					/* 最大值 */
 #define MINNUM(x, y)						(((x) < (y)) ? (x) : (y))					/* 最小值 */
-#define OFF_SET_OF(TYPE, MEMBER)			((uint32_t)&((TYPE *)0)->MEMBER)			/* 返回结构体中一个成员
+#define OFF_SET_OF(TYPE, MEMBER)			((unsigned int)&((TYPE *)0)->MEMBER)			/* 返回结构体中一个成员
 																						   相对第一个成员的位置
 																						   返回值为一个INT32U类型*/
 #define STACK_TOP(stack)					(&stack[ARRAY_SIZE(stack)-1])				/* 数组中最后一个元素 */
@@ -24,15 +24,15 @@
 
 
 
-uint8_t m_system_cmd(const int8_t *cmd, const int8_t *args);
+unsigned char m_system_cmd(const char *cmd, const char *args);
 void m_system_reboot(void);
-void *m_memory_alloc(uint32_t size);
-void *m_memory_realloc(uint32_t now_size, void *old, void *addr, uint32_t len);
-uint16_t m_calculate_crc16(uint16_t crc, uint8_t *ptr, uint32_t len);
+void *m_memory_alloc(unsigned int size);
+void *m_memory_realloc(unsigned int now_size, void *old, void *addr, unsigned int len);
+unsigned short m_calculate_crc16(unsigned short crc, unsigned char *ptr, unsigned int len);
 /* 多个字节转换成无符号整型数 */
-uint32_t s_byte_to_int(const uint8_t *byte, uint32_t len);
+unsigned int s_byte_to_int(const unsigned char *byte, unsigned int len);
 /* 多个字节转换成有符号整型数 */
-int32_t s_byte_to_sint(const uint8_t *byte, uint32_t len);
+int s_byte_to_sint(const unsigned char *byte, unsigned int len);
 
 #define m_byte_to_word(byte)			s_byte_to_int(byte, 2)			/* 两个字节的数组转换成整型数 */
 #define m_byte_to_int24(byte)	    	s_byte_to_int(byte, 3)			/* 三个字节的数组转换成整型数 */

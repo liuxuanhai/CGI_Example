@@ -23,10 +23,10 @@
 #include "net.h"
 
 /* UDP 套接字创建 */
-int32_t m_udpsock_create(int8_t *eth, int8_t *ip, uint16_t port, uint32_t sendtime, uint32_t recvtime)
+int m_udpsock_create(char *eth, char *ip, unsigned short port, unsigned int sendtime, unsigned int recvtime)
 {
-	int32_t sock;
-	int32_t tmps;
+	int sock;
+	int tmps;
 	struct timeval tv_out;
 	struct sockaddr_in sin;
 	struct ifreq ifr;
@@ -39,8 +39,8 @@ int32_t m_udpsock_create(int8_t *eth, int8_t *ip, uint16_t port, uint32_t sendti
 	if(eth)		//socket绑定网卡
 	{
 		memset(&ifr, 0, sizeof(ifr));
-		strcpy(ifr.ifr_name, (int8_t *)eth);
-		if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, (int8_t *)&ifr, sizeof(struct ifreq)) == -1)
+		strcpy(ifr.ifr_name, (char *)eth);
+		if(setsockopt(sock, SOL_SOCKET, SO_BINDTODEVICE, (char *)&ifr, sizeof(struct ifreq)) == -1)
 		{
 			printf("[UDP]setsockopt:%s\r\n", strerror(errno));
 			close(sock);
@@ -83,10 +83,12 @@ int32_t m_udpsock_create(int8_t *eth, int8_t *ip, uint16_t port, uint32_t sendti
 	return sock;
 }
 /* UDP发送 */
-int32_t m_udpsock_send(int32_t fd, int8_t *ip, uint16_t port, int8_t *data, uint32_t len)
+int m_udpsock_send(int fd, char *ip, unsigned short port, char *data, unsigned int len)
 {
     if(port <= 0 || fd <= 0)
+    {
         return false;
+    }
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	if(ip)
@@ -105,3 +107,18 @@ int32_t m_udpsock_send(int32_t fd, int8_t *ip, uint16_t port, int8_t *data, uint
 #if NET_TCP_MODULE_EN					/* TCP网络通信 */
 #endif
 
+#ifndef __main__
+#define __main__ 0
+#if __main__
+int main()
+{
+    int sock = m_udpsock_create(NULL, NULL, 8994, 3, 3);
+    int sock2 = m_udpsock_create(NULL, NULL, 8995, 3, 3);
+    printf("send len is :%d\n", m_udpsock_send(sock, "127.0.0.1", 8995, "hello", strlen("hello")));
+    close(sock);
+    close(sock2);
+    return 0;
+}
+#endif
+#undef __main__
+#endif
