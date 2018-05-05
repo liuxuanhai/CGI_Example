@@ -17,7 +17,7 @@
 
 #define INI_LINE_MAX                250
 
-unsigned char c_init_module_parametr(FILE *file, c_class_parameter_map *module);
+unsigned char c_init_module_parametr(FILE *file, c_class_module *module);
 
 /* 初始化配置文件 */
 FILE *c_init_confini(char *path);

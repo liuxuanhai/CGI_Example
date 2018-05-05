@@ -54,7 +54,7 @@ FILE *c_init_confini(char *path)
     return c_open_confini(path);
 }
 
-static int s_ini_find_section(FILE* file, char *section)
+static int s_ini_find_section(FILE* file, const char *section)
 {
     unsigned int len;
     char *ptr;
@@ -111,8 +111,119 @@ static int s_find_key(FILE* file, char *key, unsigned int pos)
     }
     return -1;
 }
-unsigned char c_init_module_parametr(FILE *file, c_class_parameter_map *module)
+
+
+static char *s_create_inikey(FILE* file, unsigned int pos, char *key, char *value)
 {
+    char *str;
+    int size;
+    int len, num;
+
+    if(fseek(file, pos, SEEK_SET) == -1)
+    {
+        return NULL;
+    }
+    fseek(file, pos, SEEK_SET);
+    len = strlen((char *)key);
+    while(1)
+    {
+        if((str = fgets(s_file_buf, INI_LINE_MAX, file)) == NULL)
+        {
+            pos = ftell(file);
+            break;
+        }
+        if(*str == '[')
+        {
+            break;
+        }
+        num = strlen(str);
+        if((num >= len) && (*str != '\r') && (*str != '\n') && (*str != ';'))
+        {
+            if(memcmp(str, key, len) == 0)
+            {// 去掉回车换行
+                if((str[num - 1] == '\r') || (str[num - 1] == '\n'))
+                {
+                    str[num - 1] = 0;   
+                }
+                if((str[num - 2] == '\r') || (str[num - 2] == '\n'))
+                {
+                    str[num - 2] = 0;   
+                }
+                str += len;
+                if(*str++ == '=')
+                {
+                    return str;     //返回文件位置
+                }
+            }
+        }
+        pos = ftell(file);
+    }
+
+    fseek(file, 0, SEEK_END);       //文件尾
+    size = ftell(file);
+    if(size > pos)      //暂存剩余文件
+    {
+        str = (char *)m_memory_alloc(size - pos);
+        fseek(file, pos, SEEK_SET);
+        fread(str, 1, size - pos, file);
+    }
+    else
+    {
+        str = NULL;
+    }
+    fseek(file, pos, SEEK_SET);
+    sprintf(s_file_buf, "%s=%s\r\n", key, value);
+    fputs(s_file_buf, file);
+    if(str)
+    {
+        fwrite(str, 1, size - pos, file);
+        free(str);
+    }
+    return value;
+}
+
+
+static int s_create_section(FILE *file, const char *section)
+{
+    if(file == NULL)
+    {
+        return -1;
+    }
+    if(s_ini_find_section(file, section) == -1)
+    {
+        sprintf(s_file_buf, "[%s]\r\n", section);
+        fputs(s_file_buf, file);
+    }
+    return ftell(file);
+}
+
+unsigned char c_init_module_parametr(FILE *file, c_class_module *module)
+{
+    int node;
+    char name[32];
+    char *val;
+    c_class_parameter *parameter = NULL;
+    c_class_parameter_map *map = NULL;
+
+    parameter = (c_class_parameter_map *)m_memory_alloc(100);
+
+    if((node = s_create_section(file, module->xmlNode)) != -1)
+    {
+        for(map = module->definite_module; map->id.id < MAP_END; map++)
+        {
+            if(map->initial_value)
+            {
+                sprintf(name, "%s", map->id.str);
+                if((val = s_create_inikey(file, node, name, map->initial_value)) != NULL)
+                {
+                    if(map->data_addr)
+                    {
+                        //ParaCheck(map, val, parameter);
+                    }
+                }
+            }
+        }
+    }
 
 }
 /* 读取配置文件 */

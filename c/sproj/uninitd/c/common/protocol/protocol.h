@@ -27,6 +27,8 @@ typedef struct{
     char pdu[0];
 }c_class_packet;
 
+#define MAP_END             0xFFFF
+
 typedef const struct{
     char *str;
     int id;
@@ -37,10 +39,10 @@ typedef const struct _c_class_parameter_map{
     char data_len;
     char data_type;
     char rw_permission;
-    const char initial_value;
+    char *initial_value;
     void *data_addr;
-    c_class_packet *(*getset)(c_class_parameter parameter*, c_common_packet *packet, const struct _c_class_parameter_map *map, unsigned int rw);
-    c_class_packet *(*check)(c_class_parameter parameter*, c_common_packet *packet, const struct _c_class_parameter_map *map, unsigned int rw);
+    c_class_packet *(*getset)(c_class_parameter *parameter, c_common_packet *packet, const struct _c_class_parameter_map *map, unsigned int rw);
+    c_class_packet *(*check)(c_class_parameter *parameter, c_common_packet *packet, const struct _c_class_parameter_map *map, unsigned int rw);
     char (*valid)(void);
     const char *section;
     char reverse[8];
