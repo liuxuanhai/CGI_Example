@@ -12,6 +12,7 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #include <linux/types.h>
 
@@ -209,77 +210,73 @@ int s_byte_to_sint(const unsigned char *byte, unsigned int len)
 	return tmp;
 }
 
-int m_valto_str(char *str, const char *buf, unsigned int len, unsigned int type)
+static const char HexAscii[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+unsigned int m_ascii_to_hex(unsigned char *hex, const char *ascii, unsigned int len)
 {
-    *str = 0;
-    switch(type)
+    unsigned int num;
+    unsigned int ch;
+    unsigned int flag;
+
+    if(len == 0)
     {
-        case TYPE_SINT1:
-            if(len != 1)
-            {
-                return -1;
-            }
-            sprintf((char *)str, "%d", (char)buf[0]);
-            break;
-        case TYPE_SINT2:
-            if(len != 2)
-            {
-                return -1;
-            }
-            sprintf((char *)str, "%d", (short)s_byte_to_int(buf, 2));
-            break;
-        case TYPE_SINT4:
-            if(len != 4)
-            {
-                return -1;
-            }
-            sprintf((char *)str, "%d", (int)s_byte_to_int(buf, 4));
-            break;
-        case TYPE_BIT:
-            if(len != 1)
-            {
-                return -1;
-            }
-            sprintf((char *)str, "%u", buf[0] & 0x01);
-            break;
-        case TYPE_UINT1:
-            if(len != 1)
-            {
-                return -1;
-            }
-            sprintf((char *)str, "%u", (unsigned char)buf[0]);
-            break;
-        case TYPE_UINT2:
-            if(len != 2)
-            {
-                return -1;
-            }
-            sprintf((char *)str, "%u", (unsigned char)s_byte_to_int(buf, 2));
-            break;
-        case TYPE_UINT3:
-            if(len != 3)
-            {
-                return -1;
-            }
-            sprintf((char *)str, "%u", (unsigned char)s_byte_to_int(buf, 3));
-            break;
-        case TYPE_UINT4:
-            if(len != 4)
-            {
-                return -1;
-            }
-            sprintf((char *)str, "%u", (unsigned char)s_byte_to_int(buf, 4));
-            break;
-        case TYPE_STR:
-            strcpy((char *)str, (char *)buf);
-            break;
-        case TYPE_DIG:
-        case TYPE_NULL:
-            Digit2Ascii(str, buf, len);
-            str[len << 1] = 0;
-            break;
-        default:
-            return -1;
+        while(isxdigit(*(ascii + len)))
+        {
+            len++;
+        }
     }
-    return 0;
+    if((num = len & 0x01) == 1)
+    {
+        len++;
+        flag = true;
+    }
+    else
+    {
+        flag = false;
+    }
+    for(; num < len; num++)
+    {
+        ch = *ascii++;
+        if((ch >= '0') && (ch <= '9'))
+        {
+            ch -= '0';
+        }
+        else if((ch >= 'A') && (ch <= 'F'))
+        {
+            ch -= 'A' - 0x0A;
+        }
+        else if((ch >= 'a') && (ch <= 'f'))
+        {
+            ch -= 'a' - 0x0A;
+        }
+        else
+        {
+            break;      // 遇到非法字符,转换提前结束
+        }
+        if(num & 0x01)
+        {
+            if(flag)
+            {
+                flag = false;
+                *hex = 0;
+            }
+            *hex |= ch;         //低半字节
+            hex++;
+        }
+        else
+        {
+            *hex = ch << 4;     //高半字节
+        }
+    }
+    return num / 2;
+}
+
+char *m_digit_to_ascii(char *ascii, const unsigned char *digit, unsigned int len)
+{
+    for( ; len--; digit++)
+    {
+            *ascii++ = HexAscii[*digit >> 4];
+            *ascii++ = HexAscii[*digit & 0x0F];
+        }
+    return ascii;
 }

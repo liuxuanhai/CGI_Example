@@ -1,12 +1,12 @@
 /******************************************    *******************************
 
-      > File Name: sysconf.c
+      > File Name: init_config_file.c
 
       > Author: Ywl
 
       > Descripsion:
 
-      > Created Time:     Sat 28 Apr 2018 12:41:42 AM PDT
+      > Created Time:     Sat 05 May 2018 01:43:36 AM PDT
 
       > Modify Time: 
 
@@ -18,15 +18,12 @@
 #include <fcntl.h>
 #include <pthread.h>
 
-#include "sysconf.h"
 #include "../../module/module.h"
+#include "../usrlib/usrlib.h"
+#include "../protocol/protocol.h"
+#include "init_config_file.h"
 
 pthread_mutex_t s_ini_lock = PTHREAD_MUTEX_INITIALIZER;
-
-static FILE *ssys_confini_fd = NULL;
-
-#define INI_LINE_MAX                250
-
 static char s_file_buf[INI_LINE_MAX + 1];
 
 
@@ -57,12 +54,7 @@ FILE *c_init_confini(char *path)
     return c_open_confini(path);
 }
 
-/* 读取配置文件 */
-unsigned char c_get_confini(FILE *file, char *section, char *keyId, char *buf, unsigned int len, unsigned char type)
-{
-	return true;
-}
-int IniFindSection(FILE* file, char *section)
+static int s_ini_find_section(FILE* file, char *section)
 {
     unsigned int len;
     char *ptr;
@@ -89,7 +81,7 @@ int IniFindSection(FILE* file, char *section)
     }
     return -1;  //找不到
 }
-int FindKey(FILE* file, char *key, unsigned int pos)
+static int s_find_key(FILE* file, char *key, unsigned int pos)
 {
     int len;
     char *ptr;
@@ -119,8 +111,59 @@ int FindKey(FILE* file, char *key, unsigned int pos)
     }
     return -1;
 }
+unsigned char c_init_module_parametr(FILE *file, c_class_parameter_map *module)
+{
+
+}
+/* 读取配置文件 */
+unsigned char c_get_confini(FILE *file, char *section, char *keyId, unsigned char *buf, unsigned int len, unsigned char type)
+{
+    char *str;
+    int pos;
+
+    if(file == NULL)
+    {
+        return false;
+    }
+    pthread_mutex_lock(&s_ini_lock);
+    if(s_ini_find_section(file, section) != -1)
+    {
+        printf("找到关键字%s\r\n", section);
+        pos = ftell(file);
+        if((pos = s_find_key(file, keyId, pos)) != -1)
+        {
+            fseek(file, pos, SEEK_SET);
+            str = fgets(s_file_buf, INI_LINE_MAX, file);
+            pos = strlen(str);
+            if((str[pos - 1] == '\r') || (str[pos - 1] == '\n'))
+            {
+                str[pos - 1] = 0;   
+            }
+            if((str[pos - 2] == '\r') || (str[pos - 2] == '\n'))
+            {
+                str[pos - 2] = 0;   
+            }
+            str += strlen(keyId);
+            if(*str == '=')
+            {
+                str++;
+                if(c_str_to_val(buf, len, type, str) == 0)
+                {
+                    pthread_mutex_unlock(&s_ini_lock);
+                    return false;
+                }
+            }
+        }
+    }
+    pthread_mutex_unlock(&s_ini_lock);
+    if(type == TYPE_STR)    // 读取失败,字符串长度设为0
+    {
+        *buf = 0;
+    }
+    return false;
+}
 /* 写入配置文件 */
-unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, unsigned int len, unsigned char type)
+unsigned char c_set_confini(FILE *file, char *section, char *keyId, unsigned char *buf, unsigned int len, unsigned char type)
 {
     int pos;
     int fd;
@@ -128,15 +171,15 @@ unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, u
     char *ptr;
 
     pthread_mutex_lock(&s_ini_lock);
-    if(IniFindSection(file, section) != -1)
+    if(s_ini_find_section(file, section) != -1)
     {
         pos = ftell(file);
-        if((pos = FindKey(file, keyId, pos)) != -1)
+        if((pos = s_find_key(file, keyId, pos)) != -1)
         {
             cur = ftell(file);
-            fseek(file, 0, SEEK_END);      //文件尾
-            size = ftell(file);        //剩余文件大小
-            if(size > cur)     //暂存剩余文件
+            fseek(file, 0, SEEK_END);
+            size = ftell(file); 
+            if(size > cur)  
             {
                 ptr = m_memory_alloc(size - cur);
                 fseek(file, cur, SEEK_SET);
@@ -147,7 +190,7 @@ unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, u
                 ptr = NULL;
             }
             sprintf(s_file_buf, "%s=", keyId);
-            Val2Str(s_file_buf + strlen(s_file_buf), buf, len, type);
+            c_val_to_str(s_file_buf + strlen(s_file_buf), buf, len, type);
             strcat(s_file_buf, "\r\n");
             fseek(file, pos, SEEK_SET);
             fputs(s_file_buf, file);
@@ -163,7 +206,7 @@ unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, u
             fsync(fd);
             printf("修改%s的%s", section, s_file_buf);
             pthread_mutex_unlock(&s_ini_lock);
-            return 0;
+            return true;
         }
         else
         {
@@ -176,28 +219,7 @@ unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, u
     }
 
     pthread_mutex_unlock(&s_ini_lock);
-    return -1;
-    return true;
+    return false;
 }
 
 
-/* 关闭配置文件 */
-void c_closesys_confini(void)
-{
-    c_close_confini(ssys_confini_fd);
-}
-
-/* 打开配置文件 */
-static unsigned char s_opensys_confini(void)
-{
-    if(NULL == (ssys_confini_fd = c_init_confini(SYS_CONFIG_INI)))
-    {
-        return false;
-    }
-    return true;
-}
-/* 初始化配置文件 */
-unsigned char s_initsys_confini(void)
-{
-    return s_opensys_confini();
-}

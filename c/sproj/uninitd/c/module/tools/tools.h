@@ -33,6 +33,8 @@ unsigned short m_calculate_crc16(unsigned short crc, unsigned char *ptr, unsigne
 unsigned int s_byte_to_int(const unsigned char *byte, unsigned int len);
 /* 多个字节转换成有符号整型数 */
 int s_byte_to_sint(const unsigned char *byte, unsigned int len);
+char *m_digit_to_ascii(char *ascii, const unsigned char *digit, unsigned int len);
+unsigned int m_ascii_to_hex(unsigned char *hex, const char *ascii, unsigned int len);
 
 #define m_byte_to_word(byte)			s_byte_to_int(byte, 2)			/* 两个字节的数组转换成整型数 */
 #define m_byte_to_int24(byte)	    	s_byte_to_int(byte, 3)			/* 三个字节的数组转换成整型数 */

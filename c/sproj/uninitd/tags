@@ -12,9 +12,10 @@ CGI_UDP_CLIENT_PORT	c/module/net/net.h	23;"	d
 CLEAN_SYSTEM_LOG	c/common/fileperation/syslog.h	19;"	d
 GCC	makefile	/^GCC = gcc$/;"	m
 GROUP_NUM	c/module/tools/tools.h	16;"	d
+HexAscii	c/module/tools/tools.c	/^static const char HexAscii[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};$/;"	v	file:
 INET_NTOA	c/module/net/net.h	13;"	d
+INI_LINE_MAX	c/common/fileperation/sysconf.c	29;"	d	file:
 INI_LINE_MAX	c/common/fileperation/sysconf.h	20;"	d
-IniFindSection	c/common/fileperation/sysconf.c	/^int IniFindSection(FILE* file, char *section)$/;"	f
 LIB	makefile	/^LIB = -ldl -lm -lpthread $/;"	m
 MASTER_UDP_SERVER_PORT	c/module/net/net.h	22;"	d
 MAXNUM	c/module/tools/tools.h	17;"	d
@@ -53,6 +54,17 @@ TASK_MAIN_ID	c/common/systemtask/systask.h	/^	TASK_MAIN_ID = 0,							\/* 主任
 TCP_DATA_TYPE	c/module/net/net.h	19;"	d
 TICK_NANOSEC	c/module/timer/timer.h	20;"	d
 TMPDIR	makefile	/^TMPDIR=$(dir $(SAMINCH))$/;"	m
+TYPE_BIT	c/common/usrlib/usrlib.h	/^    TYPE_BIT,           \/\/状态、bit类型$/;"	e	enum:__anon4
+TYPE_DIG	c/common/usrlib/usrlib.h	/^    TYPE_DIG,           \/\/数字串(传输时按照数字串自身的顺序，由左向右逐个字节传输。)$/;"	e	enum:__anon4
+TYPE_NULL	c/common/usrlib/usrlib.h	/^    TYPE_NULL,          \/\/无数据类型$/;"	e	enum:__anon4
+TYPE_SINT1	c/common/usrlib/usrlib.h	/^    TYPE_SINT1,     $/;"	e	enum:__anon4
+TYPE_SINT2	c/common/usrlib/usrlib.h	/^    TYPE_SINT2,     $/;"	e	enum:__anon4
+TYPE_SINT4	c/common/usrlib/usrlib.h	/^    TYPE_SINT4,     $/;"	e	enum:__anon4
+TYPE_STR	c/common/usrlib/usrlib.h	/^    TYPE_STR,           \/\/字符串$/;"	e	enum:__anon4
+TYPE_UINT1	c/common/usrlib/usrlib.h	/^    TYPE_UINT1,     $/;"	e	enum:__anon4
+TYPE_UINT2	c/common/usrlib/usrlib.h	/^    TYPE_UINT2,     $/;"	e	enum:__anon4
+TYPE_UINT3	c/common/usrlib/usrlib.h	/^    TYPE_UINT3,     $/;"	e	enum:__anon4
+TYPE_UINT4	c/common/usrlib/usrlib.h	/^    TYPE_UINT4      $/;"	e	enum:__anon4
 UBUNTU_UDP_SERVER_EN	c/module/net/net.h	21;"	d
 UDP_DATA_TYPE	c/module/net/net.h	18;"	d
 _BOOL_H	c/module/bool.h	16;"	d
@@ -66,6 +78,7 @@ _SYSLOG_H	c/common/fileperation/syslog.h	10;"	d
 _SYSTASK_H	c/common/systemtask/systask.h	10;"	d
 _TIMER_H	c/module/timer/timer.h	10;"	d
 _TOOLS_H	c/module/tools/tools.h	10;"	d
+_USRLIB_H	c/common/usrlib/usrlib.h	16;"	d
 __main__	c/module/net/net.c	111;"	d	file:
 __main__	c/module/net/net.c	123;"	d	file:
 __main__	c/module/timer/timer.c	133;"	d	file:
@@ -74,29 +87,33 @@ c_appendstr_tofile	c/common/fileperation/fileoperation.c	/^unsigned char c_appen
 c_ckeck_task_queue	c/common/systemtask/systask.c	/^void c_ckeck_task_queue(void)$/;"	f
 c_close_confini	c/common/fileperation/sysconf.c	/^void c_close_confini(FILE *file)$/;"	f
 c_closesys_confini	c/common/fileperation/sysconf.c	/^void c_closesys_confini(void)$/;"	f
-c_get_confini	c/common/fileperation/sysconf.c	/^unsigned char c_get_confini(FILE *file, char *section, char *keyId, char *buf, unsigned int len, unsigned char type)$/;"	f
+c_get_confini	c/common/fileperation/sysconf.c	/^unsigned char c_get_confini(FILE *file, char *section, char *keyId, unsigned char *buf, unsigned int len, unsigned char type)$/;"	f
 c_init_confini	c/common/fileperation/sysconf.c	/^FILE *c_init_confini(char *path)$/;"	f
 c_open_confini	c/common/fileperation/sysconf.c	/^FILE *c_open_confini(char *path)$/;"	f
-c_set_confini	c/common/fileperation/sysconf.c	/^unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, unsigned int len, unsigned char type)$/;"	f
+c_set_confini	c/common/fileperation/sysconf.c	/^unsigned char c_set_confini(FILE *file, char *section, char *keyId, unsigned char *buf, unsigned int len, unsigned char type)$/;"	f
+c_str_to_val	c/common/usrlib/usrlib.c	/^char c_str_to_val(unsigned char *buf, unsigned int len, unsigned int type, char *str)$/;"	f
 c_system_initialize	c/common/systemtask/systask.c	/^unsigned char  c_system_initialize(void)$/;"	f
 c_system_main_task	c/common/systemtask/systask.c	/^void c_system_main_task(void)$/;"	f
 c_task_exit	c/common/systemtask/systask.c	/^void c_task_exit(void)$/;"	f
 c_task_register	c/common/systemtask/systask.c	/^void c_task_register(unsigned char id, const char *name, unsigned int life)$/;"	f
 c_task_update	c/common/systemtask/systask.c	/^void c_task_update(unsigned char id)$/;"	f
-dbg	c/module/tools/tools.c	114;"	d	file:
-dbg	c/module/tools/tools.c	62;"	d	file:
+c_val_to_str	c/common/usrlib/usrlib.c	/^char c_val_to_str(char *str, const unsigned char *buf, unsigned int len, unsigned int type)$/;"	f
+dbg	c/module/tools/tools.c	115;"	d	file:
+dbg	c/module/tools/tools.c	63;"	d	file:
 false	c/module/bool.h	19;"	d
 fd	c/common/fileperation/syslog.c	/^    int *fd;$/;"	m	struct:__anon1	file:
 filename	c/common/fileperation/syslog.c	/^    const char *filename;$/;"	m	struct:__anon1	file:
 id	c/common/systemtask/systask.c	/^	unsigned char id;$/;"	m	struct:__anon2	file:
 life	c/common/systemtask/systask.c	/^	unsigned int life;$/;"	m	struct:__anon2	file:
 lock	c/common/fileperation/syslog.c	/^    pthread_mutex_t *lock;$/;"	m	struct:__anon1	file:
-m_byte_to_int24	c/module/tools/tools.h	38;"	d
-m_byte_to_long	c/module/tools/tools.h	39;"	d
-m_byte_to_word	c/module/tools/tools.h	37;"	d
+m_ascii_to_hex	c/module/tools/tools.c	/^unsigned int m_ascii_to_hex(unsigned char *hex, const char *ascii, unsigned int len)$/;"	f
+m_byte_to_int24	c/module/tools/tools.h	40;"	d
+m_byte_to_long	c/module/tools/tools.h	41;"	d
+m_byte_to_word	c/module/tools/tools.h	39;"	d
 m_calculate_crc16	c/module/tools/tools.c	/^unsigned short m_calculate_crc16(unsigned short crc, unsigned char *ptr, unsigned int len)$/;"	f
 m_check_system_log	c/common/fileperation/syslog.c	/^void m_check_system_log(void)$/;"	f
 m_close_system_log	c/common/fileperation/syslog.c	/^void m_close_system_log(void)$/;"	f
+m_digit_to_ascii	c/module/tools/tools.c	/^char *m_digit_to_ascii(char *ascii, const unsigned char *digit, unsigned int len)$/;"	f
 m_getostime	c/module/timer/timer.c	/^unsigned int m_getostime(void)$/;"	f
 m_getostime_format	c/module/timer/timer.c	/^struct tm *m_getostime_format(struct tm *tm)$/;"	f
 m_getostimestr	c/module/timer/timer.c	/^char *m_getostimestr(char *str)$/;"	f
@@ -127,6 +144,9 @@ s_ckeck_dead_task	c/common/systemtask/systask.c	/^static char s_ckeck_dead_task(
 s_class_system_loghandle	c/common/fileperation/syslog.c	/^}s_class_system_loghandle;$/;"	t	typeref:struct:__anon1	file:
 s_class_taskinfo	c/common/systemtask/systask.c	/^}s_class_taskinfo;$/;"	t	typeref:struct:__anon2	file:
 s_crc16_table	c/module/tools/tools.c	/^static const unsigned short s_crc16_table[] = {$/;"	v	file:
+s_file_buf	c/common/fileperation/sysconf.c	/^static char s_file_buf[INI_LINE_MAX + 1];$/;"	v	file:
+s_find_key	c/common/fileperation/sysconf.c	/^static int s_find_key(FILE* file, char *key, unsigned int pos)$/;"	f	file:
+s_ini_find_section	c/common/fileperation/sysconf.c	/^static int s_ini_find_section(FILE* file, char *section)$/;"	f	file:
 s_ini_lock	c/common/fileperation/sysconf.c	/^pthread_mutex_t s_ini_lock = PTHREAD_MUTEX_INITIALIZER;$/;"	v
 s_initsys_confini	c/common/fileperation/sysconf.c	/^unsigned char s_initsys_confini(void)$/;"	f
 s_opensys_confini	c/common/fileperation/sysconf.c	/^static unsigned char s_opensys_confini(void)$/;"	f	file:
