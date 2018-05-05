@@ -25,6 +25,10 @@ pthread_mutex_t s_ini_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static FILE *ssys_confini_fd = NULL;
 
+#define INI_LINE_MAX                250
+
+static char s_file_buf[INI_LINE_MAX + 1];
+
 
 /* 关闭配置文件 */
 void c_close_confini(FILE *file)
@@ -71,7 +75,7 @@ int IniFindSection(FILE* file, char *section)
     fseek(file, 0, SEEK_SET);
     len = strlen(section);
     pos = ftell(file);
-    while((ptr = fgets(FileBuf, INI_LINE_MAX, file)) != NULL)
+    while((ptr = fgets(s_file_buf, INI_LINE_MAX, file)) != NULL)
     {
         if((*ptr == '[') && (strlen((char *)ptr) >= len + 2))
         {
@@ -85,6 +89,36 @@ int IniFindSection(FILE* file, char *section)
     }
     return -1;  //找不到
 }
+int FindKey(FILE* file, char *key, unsigned int pos)
+{
+    int len;
+    char *ptr;
+
+    if(file == NULL)
+    {
+        return -1;
+    }
+    len = strlen(key);
+    while((ptr = fgets(s_file_buf, INI_LINE_MAX, file)) != NULL)
+    {
+        if(*ptr == '[')     //遇到下一段
+        {
+            break;
+        }
+        if((strlen(ptr) >= len) && (*ptr != '\r') && (*ptr != '\n') && (*ptr != ';'))
+        {
+            if(memcmp(ptr, key, len) == 0)
+            {
+                if(*(ptr + len) == '=')
+                {
+                    return pos;     //返回文件位置
+                }
+            }
+        }
+        pos = ftell(file);
+    }
+    return -1;
+}
 /* 写入配置文件 */
 unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, unsigned int len, unsigned char type)
 {
@@ -94,17 +128,17 @@ unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, u
     char *ptr;
 
     pthread_mutex_lock(&s_ini_lock);
-    if(IniFindSection(file, setion) != -1)
+    if(IniFindSection(file, section) != -1)
     {
         pos = ftell(file);
-        if((pos = FindKey(file, key, pos)) != -1)
+        if((pos = FindKey(file, keyId, pos)) != -1)
         {
             cur = ftell(file);
             fseek(file, 0, SEEK_END);      //文件尾
             size = ftell(file);        //剩余文件大小
             if(size > cur)     //暂存剩余文件
             {
-                ptr = (INT8U *)MemoryAlloc(size - cur);
+                ptr = m_memory_alloc(size - cur);
                 fseek(file, cur, SEEK_SET);
                 fread(ptr, 1, size - cur, file);
             }
@@ -112,11 +146,11 @@ unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, u
             {
                 ptr = NULL;
             }
-            sprintf(FileBuf, "%s=", key);
-            Val2Str((INT8U *)FileBuf + strlen(FileBuf), buf, len, type);
-            strcat(FileBuf, "\r\n");
+            sprintf(s_file_buf, "%s=", keyId);
+            Val2Str(s_file_buf + strlen(s_file_buf), buf, len, type);
+            strcat(s_file_buf, "\r\n");
             fseek(file, pos, SEEK_SET);
-            fputs(FileBuf, file);
+            fputs(s_file_buf, file);
             if(ptr)
             {
                 fwrite(ptr, 1, size - cur, file);
@@ -127,18 +161,18 @@ unsigned char c_set_confini(FILE *file, char *section, char *keyId, char *buf, u
             fd = fileno(file);
             ftruncate(fd, size);
             fsync(fd);
-            DbgPrintf(1, DBG_SW(FileDbg), "修改%s的%s", setion, FileBuf);
+            printf("修改%s的%s", section, s_file_buf);
             pthread_mutex_unlock(&s_ini_lock);
             return 0;
         }
         else
         {
-            DbgPrintf(1, DBG_SW(FileDbg), "找不到关键字%s\r\n", key);
+            printf("找不到关键字%s\r\n", keyId);
         }
     }
     else
     {
-        DbgPrintf(1, DBG_SW(FileDbg), "找不到段%s\r\n", setion);
+        printf("找不到段%s\r\n", section);
     }
 
     pthread_mutex_unlock(&s_ini_lock);

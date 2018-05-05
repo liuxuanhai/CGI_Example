@@ -1,12 +1,36 @@
 body{
+    font-family: Arial,Serif;
     font-size: 15pt;
+    background-color: #88b2d2;
 }
 
 .article-des{
+    background-color: #eaebef;
     font-size: 10pt;
     color: blue;
+    line-height: 1.45;
 }
 
 #p-1{
+    font-style: italic;
+    font-weight: bold;
     color: red;
+}
+p:first-letter{
+    color:yellow;
+}
+a:link{
+    color: red;
+}
+a:visited {
+    color: orange;
+}
+a:focus {
+    color: purple;
+}
+a:hover {
+    color: green;
+}
+a:active {
+    color: blue;
 }

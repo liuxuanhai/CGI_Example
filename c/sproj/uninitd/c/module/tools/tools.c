@@ -208,3 +208,78 @@ int s_byte_to_sint(const unsigned char *byte, unsigned int len)
 	}
 	return tmp;
 }
+
+int m_valto_str(char *str, const char *buf, unsigned int len, unsigned int type)
+{
+    *str = 0;
+    switch(type)
+    {
+        case TYPE_SINT1:
+            if(len != 1)
+            {
+                return -1;
+            }
+            sprintf((char *)str, "%d", (char)buf[0]);
+            break;
+        case TYPE_SINT2:
+            if(len != 2)
+            {
+                return -1;
+            }
+            sprintf((char *)str, "%d", (short)s_byte_to_int(buf, 2));
+            break;
+        case TYPE_SINT4:
+            if(len != 4)
+            {
+                return -1;
+            }
+            sprintf((char *)str, "%d", (int)s_byte_to_int(buf, 4));
+            break;
+        case TYPE_BIT:
+            if(len != 1)
+            {
+                return -1;
+            }
+            sprintf((char *)str, "%u", buf[0] & 0x01);
+            break;
+        case TYPE_UINT1:
+            if(len != 1)
+            {
+                return -1;
+            }
+            sprintf((char *)str, "%u", (unsigned char)buf[0]);
+            break;
+        case TYPE_UINT2:
+            if(len != 2)
+            {
+                return -1;
+            }
+            sprintf((char *)str, "%u", (unsigned char)s_byte_to_int(buf, 2));
+            break;
+        case TYPE_UINT3:
+            if(len != 3)
+            {
+                return -1;
+            }
+            sprintf((char *)str, "%u", (unsigned char)s_byte_to_int(buf, 3));
+            break;
+        case TYPE_UINT4:
+            if(len != 4)
+            {
+                return -1;
+            }
+            sprintf((char *)str, "%u", (unsigned char)s_byte_to_int(buf, 4));
+            break;
+        case TYPE_STR:
+            strcpy((char *)str, (char *)buf);
+            break;
+        case TYPE_DIG:
+        case TYPE_NULL:
+            Digit2Ascii(str, buf, len);
+            str[len << 1] = 0;
+            break;
+        default:
+            return -1;
+    }
+    return 0;
+}
