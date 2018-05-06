@@ -19,6 +19,15 @@
 #define OFF_SET_OF(TYPE, MEMBER)			((unsigned int)&((TYPE *)0)->MEMBER)			/* 返回结构体中一个成员
 																						   相对第一个成员的位置
 																						   返回值为一个INT32U类型*/
+#ifndef offsetof
+#define offsetof(TYPE, MEMBER)                      ((size_t)&((TYPE *)0)->MEMBER)
+#endif
+#ifndef container_of
+#define container_of(ptr, type, member) ({                      \
+        const typeof( ((type *)0)->member ) *__mptr = (ptr);    \
+        (type *)( (char *)__mptr - offsetof(type,member) );})
+#endif
+
 #define STACK_TOP(stack)					(&stack[ARRAY_SIZE(stack)-1])				/* 数组中最后一个元素 */
 #define BIT(n)								(1ul << (n))								/* 取bit0~31 中的某位 */
 
