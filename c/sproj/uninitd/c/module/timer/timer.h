@@ -36,7 +36,7 @@ struct tm *m_getostime_format(struct tm *tm);
 /* 打印一个月的月历 */
 void m_print_monthly(unsigned char month);
 /* 打印一年的年历 */
-void m_print_calendar(uint16_t year);
+void m_print_calendar(unsigned short year);
 
 #endif
 
