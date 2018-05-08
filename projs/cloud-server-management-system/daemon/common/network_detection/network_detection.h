@@ -15,5 +15,10 @@
 #ifndef _NETWORK_DETECTION_H
 #define _NETWORK_DETECTION_H
 
+#define DAEMON_SERVER_PORT      6000
+#define VER_CENTER_PORT         6001
+#define APPLICATION_PORT        6002
+
+void network_start(void);
 
 #endif

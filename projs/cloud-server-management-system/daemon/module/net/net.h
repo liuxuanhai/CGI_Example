@@ -9,6 +9,10 @@
 #ifndef _NET_H
 #define _NET_H
 
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <sys/socket.h>
+
 /* 将网络二进制的数字转换成网络地址 */
 #define INET_NTOA(ip)		ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF
 

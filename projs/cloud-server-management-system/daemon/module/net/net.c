@@ -15,10 +15,6 @@
 #include <errno.h>
 #include <unistd.h>
 
-#include <arpa/inet.h>
-#include <net/if.h>
-#include <sys/socket.h>
-
 #include "../bool.h"
 #include "net.h"
 
