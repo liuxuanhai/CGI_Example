@@ -1,3 +1,17 @@
+/******************************************    *******************************
+
+      > File Name: encryption.c
+
+      > Author: Ywl
+
+      > Descripsion:
+
+      > Created Time:     Thu 17 May 2018 06:53:01 PM PDT
+
+      > Modify Time: 
+
+ *********************************    ***************************************/
+
 #include <stdio.h>
 #include <string.h>
 
@@ -157,7 +171,7 @@ unsigned char *openssl_lib(unsigned char encrypt_type, const unsigned char *dest
 
 
 
-#if 1
+#if 0
 int main()
 {
 	unsigned char md[33] = {0};

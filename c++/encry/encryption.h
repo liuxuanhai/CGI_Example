@@ -1,7 +1,19 @@
+/******************************************    *******************************
 
-#ifndef __ENCRYPTION_H
-#define __ENCRYPTION_H
+      > File Name: encryption.h
 
+      > Author: Ywl
+
+      > Descripsion:
+
+      > Created Time:     Thu 17 May 2018 06:53:29 PM PDT
+
+      > Modify Time: 
+
+ *********************************    ***************************************/
+
+#ifndef _ENCRYPTION_H
+#define _ENCRYPTION_H
 
 #ifdef __cplusplus
 extern "C" {

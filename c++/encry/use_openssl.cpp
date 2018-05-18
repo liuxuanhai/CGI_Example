@@ -25,4 +25,4 @@ int main(int argc, char **argv)
 	printf("sha256: %s\n", md);
 	return 0;
 }
-/* g++ use_openssl.cpp -lcrypto -lssl */
+/* g++ use_openssl.cpp -lcrypto */
