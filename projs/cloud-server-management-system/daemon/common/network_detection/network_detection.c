@@ -31,7 +31,7 @@ struct class_poll{
 
 static struct class_poll test_send = {
     "daemon heart",
-    strlen("daemon heart")
+    12
 };
 
 void send_udp_data(char *data, unsigned int len)
